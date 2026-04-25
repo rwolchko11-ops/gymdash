@@ -1061,7 +1061,7 @@ function renderSettings() {
         <button class="btn-outline" onclick="triggerImport()" style="margin-top:0">⬆ Import CSV</button>
         <button class="btn-outline" onclick="exportCSV()" style="margin-top:0">⬇ Export CSV</button>
       </div>
-      <input type="file" id="csvFileInput" accept=".csv" style="display:none" onchange="handleImport(this)" />
+      <input type="file" id="csvFileInput" accept=".csv,text/csv,text/plain,application/csv" style="display:none" onchange="handleImport(this)" />
     </div>
   `;
 }
