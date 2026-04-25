@@ -1092,7 +1092,16 @@ function addExercise(routineName) {
 }
 
 function triggerImport() {
-  document.getElementById('csvFileInput').click();
+  if (window.showOpenFilePicker) {
+    window.showOpenFilePicker({ multiple: false })
+      .then(async ([handle]) => {
+        const file = await handle.getFile();
+        const text = await file.text();
+        processImportText(text);
+      }).catch(() => {});
+  } else {
+    document.getElementById('csvFileInput').click();
+  }
 }
 
 function exportCSV() {
