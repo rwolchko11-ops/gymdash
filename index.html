@@ -1092,7 +1092,18 @@ function addExercise(routineName) {
 }
 
 function triggerImport() {
-  document.getElementById('csvFileInput').click();
+  if (window.showOpenFilePicker) {
+    window.showOpenFilePicker({
+      types: [{ description: 'CSV', accept: { 'text/csv': ['.csv'], 'text/plain': ['.csv'] } }],
+      multiple: false
+    }).then(async ([handle]) => {
+      const file = await handle.getFile();
+      const text = await file.text();
+      processImportText(text);
+    }).catch(() => {});
+  } else {
+    document.getElementById('csvFileInput').click();
+  }
 }
 
 function exportCSV() {
@@ -1133,47 +1144,48 @@ function handleImport(input) {
   const file = input.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => {
-    const lines = e.target.result.split('\n').map(l => l.trim()).filter(Boolean);
-    const header = lines[0].toLowerCase();
-    const dataLines = header.includes('date') ? lines.slice(1) : lines;
-
-    const rawSessions = {};
-    let skipped = 0;
-
-    dataLines.forEach(line => {
-      const parts = line.split(',');
-      if (parts.length < 4) { skipped++; return; }
-      const [rawDate, exercise, rawWeight, rawReps] = parts.map(p => p.trim());
-      const d = parseIso(rawDate);
-      if (!d || isNaN(d.getTime())) { skipped++; return; }
-      const weight = parseFloat(rawWeight);
-      const reps   = parseInt(rawReps);
-      if (isNaN(weight) || isNaN(reps)) { skipped++; return; }
-      const dateKey = isoDate(d);
-      if (!rawSessions[dateKey]) rawSessions[dateKey] = [];
-      rawSessions[dateKey].push({ exercise, weight, reps });
-    });
-
-    const { workouts } = getData();
-    const existingDates = new Set(workouts.map(w => w.date));
-    let imported = 0;
-
-    Object.entries(rawSessions).forEach(([date, sets]) => {
-      if (existingDates.has(date)) { skipped += sets.length; return; }
-      const routine = inferRoutine(sets.map(s => s.exercise));
-      workouts.push({ id: generateId(), date, routine, sets });
-      imported++;
-    });
-
-    workouts.sort((a,b) => parseIso(b.date) - parseIso(a.date));
-    saveWorkouts(workouts);
-
-    showToast(`Imported ${imported} sessions. Skipped ${skipped} rows.`);
-    renderLog();
-    input.value = '';
-  };
+  reader.onload = e => { processImportText(e.target.result); input.value = ''; };
   reader.readAsText(file);
+}
+
+function processImportText(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const header = lines[0].toLowerCase();
+  const dataLines = header.includes('date') ? lines.slice(1) : lines;
+
+  const rawSessions = {};
+  let skipped = 0;
+
+  dataLines.forEach(line => {
+    const parts = line.split(',');
+    if (parts.length < 4) { skipped++; return; }
+    const [rawDate, exercise, rawWeight, rawReps] = parts.map(p => p.trim());
+    const d = parseIso(rawDate);
+    if (!d || isNaN(d.getTime())) { skipped++; return; }
+    const weight = parseFloat(rawWeight);
+    const reps   = parseInt(rawReps);
+    if (isNaN(weight) || isNaN(reps)) { skipped++; return; }
+    const dateKey = isoDate(d);
+    if (!rawSessions[dateKey]) rawSessions[dateKey] = [];
+    rawSessions[dateKey].push({ exercise, weight, reps });
+  });
+
+  const { workouts } = getData();
+  const existingDates = new Set(workouts.map(w => w.date));
+  let imported = 0;
+
+  Object.entries(rawSessions).forEach(([date, sets]) => {
+    if (existingDates.has(date)) { skipped += sets.length; return; }
+    const routine = inferRoutine(sets.map(s => s.exercise));
+    workouts.push({ id: generateId(), date, routine, sets });
+    imported++;
+  });
+
+  workouts.sort((a,b) => parseIso(b.date) - parseIso(a.date));
+  saveWorkouts(workouts);
+
+  showToast(`Imported ${imported} sessions. Skipped ${skipped} rows.`);
+  renderLog();
 }
 
 // ── SERVICE WORKER ──
