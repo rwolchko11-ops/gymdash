@@ -1092,18 +1092,7 @@ function addExercise(routineName) {
 }
 
 function triggerImport() {
-  if (window.showOpenFilePicker) {
-    window.showOpenFilePicker({
-      types: [{ description: 'CSV', accept: { 'text/csv': ['.csv'], 'text/plain': ['.csv'] } }],
-      multiple: false
-    }).then(async ([handle]) => {
-      const file = await handle.getFile();
-      const text = await file.text();
-      processImportText(text);
-    }).catch(() => {});
-  } else {
-    document.getElementById('csvFileInput').click();
-  }
+  document.getElementById('csvFileInput').click();
 }
 
 function exportCSV() {
