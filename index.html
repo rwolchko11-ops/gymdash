@@ -702,7 +702,7 @@ function renderLog() {
       <div class="card-label">Routine</div>
       <div class="pill-row" id="routinePills">
         ${Object.keys(routines).map(r => `
-          <div class="pill ${r === currentRoutine ? 'active' : ''}" onclick="selectRoutine('${r}')">${r}</div>
+          <div class="pill ${r === currentRoutine ? 'active' : ''}" data-routine="${r}" onclick="selectRoutine(this.dataset.routine)">${r}</div>
         `).join('')}
       </div>
     </div>
@@ -990,7 +990,7 @@ function renderSettings() {
 
   const routineCards = Object.entries(routines).map(([name, exercises]) => `
     <div class="routine-card" id="rc-${name.replace(/[^a-z]/gi,'_')}">
-      <div class="routine-header" onclick="toggleRoutine('${name.replace(/[^a-z]/gi,'_')}')">
+      <div class="routine-header" data-id="${name.replace(/[^a-z]/gi,'_')}" onclick="toggleRoutine(this.dataset.id)">
         <div class="routine-name">${name}</div>
         <div class="routine-chevron">▼</div>
       </div>
@@ -998,12 +998,12 @@ function renderSettings() {
         ${exercises.map((e, i) => `
           <div class="routine-ex-row">
             <div class="routine-ex-name">${e}</div>
-            <button class="routine-ex-delete" onclick="removeExercise('${name}', ${i})">✕</button>
+            <button class="routine-ex-delete" data-routine="${name}" data-idx="${i}" onclick="removeExercise(this.dataset.routine, +this.dataset.idx)">✕</button>
           </div>
         `).join('')}
         <div class="add-exercise-row" style="margin-top:12px">
           <input class="add-exercise-input" id="addEx-${name.replace(/[^a-z]/gi,'_')}" placeholder="New exercise name..." />
-          <button class="btn-sm" onclick="addExercise('${name}')">Add</button>
+          <button class="btn-sm" data-routine="${name}" onclick="addExercise(this.dataset.routine)">Add</button>
         </div>
       </div>
     </div>
