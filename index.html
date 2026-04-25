@@ -802,17 +802,28 @@ function autoBackup(workouts) {
       csv += `${w.date},${s.exercise},${s.weight},${s.reps}\n`;
     });
   });
+  const filename = `gymdash-backup-${isoDate(new Date())}.csv`;
+  const file = new File([csv], filename, { type: 'text/csv' });
+
+  // Android/iOS: use native share sheet so user can pick save location
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    navigator.share({ files: [file], title: 'GymDash Backup' }).catch(() => {});
+    return;
+  }
+
+  // iOS Safari fallback: open in new tab → Share → Save to Files
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
   const blob = new Blob([csv], { type: 'text/csv' });
   const url  = URL.createObjectURL(blob);
-  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
   if (isIOS) {
-    // iOS Safari: open in new tab — user can Share → Save to Files
     window.open(url, '_blank');
   } else {
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `gymdash-backup-${isoDate(new Date())}.csv`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
 }
