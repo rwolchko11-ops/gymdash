@@ -789,8 +789,32 @@ function finishWorkout() {
   });
   saveWorkouts(workouts);
   currentSession = [];
-  showToast('Workout saved!');
+  autoBackup(workouts);
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
+  showToast(isIOS ? 'Saved! Tap Share → Save to Files to backup.' : 'Workout saved! Backup downloaded.');
   renderLog();
+}
+
+function autoBackup(workouts) {
+  let csv = 'Date,Exercise,Weight,Reps\n';
+  workouts.forEach(w => {
+    w.sets.forEach(s => {
+      csv += `${w.date},${s.exercise},${s.weight},${s.reps}\n`;
+    });
+  });
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
+  if (isIOS) {
+    // iOS Safari: open in new tab — user can Share → Save to Files
+    window.open(url, '_blank');
+  } else {
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `gymdash-backup-${isoDate(new Date())}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 }
 
 // ── TOAST ──
