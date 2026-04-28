@@ -25,6 +25,41 @@
   --green:        #22C55E;
 }
 
+/* ── THEME SWATCHES ── */
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+.theme-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 8px 4px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  transition: border-color 0.15s;
+}
+.theme-swatch.active { border-color: var(--primary); }
+.theme-swatch-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.1);
+}
+.theme-swatch-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  text-align: center;
+}
+.theme-swatch.active .theme-swatch-label { color: var(--text); }
+
 body {
   font-family: 'Raleway', sans-serif;
   background: var(--bg);
@@ -127,6 +162,13 @@ body {
   scrollbar-width: none;
 }
 .pill-row::-webkit-scrollbar { display: none; }
+/* Show a thin scrollbar on pointer/mouse devices (Windows browser) */
+@media (pointer: fine) {
+  .pill-row { scrollbar-width: thin; scrollbar-color: var(--primary) var(--surface2); padding-bottom: 6px; }
+  .pill-row::-webkit-scrollbar { display: block; height: 4px; }
+  .pill-row::-webkit-scrollbar-track { background: var(--surface2); border-radius: 2px; }
+  .pill-row::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 2px; }
+}
 .pill {
   flex-shrink: 0;
   padding: 8px 16px;
@@ -158,6 +200,24 @@ body {
   margin-bottom: 10px;
 }
 .select-field:focus { outline: none; border-color: var(--primary); }
+
+/* Form guide link */
+.form-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+  transition: opacity 0.15s;
+}
+.form-link-btn:hover { opacity: 0.75; }
 
 .input-row { display: flex; gap: 8px; margin-top: 10px; }
 .input-row > div { flex: 1; min-width: 0; }
@@ -268,6 +328,169 @@ body {
 }
 .set-delete:active { color: var(--primary); }
 
+/* ── SESSION GROUP (TODAY'S SETS) ── */
+.session-group { margin-bottom: 8px; }
+.session-group:last-of-type { margin-bottom: 0; }
+.session-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  padding: 8px 0 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
+  cursor: pointer;
+  user-select: none;
+}
+.session-group-chevron { font-size: 10px; transition: transform 0.2s; }
+.session-group.expanded .session-group-chevron { transform: rotate(180deg); }
+.session-group-body { display: none; }
+.session-group.expanded .session-group-body { display: block; }
+
+/* ── TROPHIES ── */
+.trophy-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.trophy-summary-count {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  line-height: 1;
+  color: var(--primary);
+  min-width: 56px;
+  text-align: center;
+}
+.trophy-summary-text { flex: 1; }
+.trophy-summary-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+.trophy-summary-sub {
+  font-size: 13px;
+  color: var(--text);
+  margin-top: 2px;
+}
+.trophy-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--surface2);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.trophy-progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.trophy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.trophy-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  position: relative;
+  transition: transform 0.2s;
+  overflow: hidden;
+}
+.trophy-card.earned { border-color: var(--trophy-color, var(--primary)); }
+.trophy-card.earned::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--trophy-color, var(--primary));
+  opacity: 0.06;
+}
+.trophy-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+}
+.trophy-card.earned .trophy-icon-wrap {
+  background: color-mix(in srgb, var(--trophy-color, var(--primary)) 15%, var(--surface));
+  border-color: var(--trophy-color, var(--primary));
+}
+.trophy-icon-wrap svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--text-muted);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.trophy-card.earned .trophy-icon-wrap svg { stroke: var(--trophy-color, var(--primary)); }
+.trophy-tier-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 20px;
+  background: var(--surface2);
+  color: var(--text-muted);
+}
+.trophy-card.earned .trophy-tier-badge {
+  background: color-mix(in srgb, var(--trophy-color, var(--primary)) 20%, var(--surface));
+  color: var(--trophy-color, var(--primary));
+}
+.trophy-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  line-height: 1.1;
+}
+.trophy-card.locked .trophy-name { color: var(--text-muted); }
+.trophy-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+.trophy-card.locked {
+  opacity: 0.55;
+  filter: grayscale(0.4);
+}
+.trophy-section-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  padding: 8px 0 4px;
+}
+
 /* ── SESSION CARDS (HISTORY) ── */
 .session-card {
   background: var(--surface);
@@ -278,6 +501,7 @@ body {
   cursor: pointer;
 }
 .session-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.session-badges { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; max-width: 60%; }
 .session-date { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px; }
 .session-badge {
   font-size: 11px;
@@ -413,6 +637,112 @@ canvas#chart { width: 100%; border-radius: 12px; display: block; }
 .data-btn-row { display: flex; gap: 10px; margin-top: 10px; }
 .data-btn-row .btn-outline { margin-top: 0; }
 
+/* ── NEW ROUTINE FORM ── */
+.new-routine-card {
+  background: var(--surface);
+  border: 1px dashed var(--primary);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 10px;
+}
+.new-routine-card .card-label { margin-bottom: 10px; color: var(--primary); }
+.new-routine-name-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.new-routine-name-input {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+.new-routine-name-input:focus { outline: none; border-color: var(--primary); }
+.new-routine-ex-list { margin-bottom: 10px; }
+.new-routine-ex-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 3px 3px 3px 0;
+}
+.new-routine-ex-chip button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0;
+  line-height: 1;
+}
+.routine-delete-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  margin-left: 4px;
+}
+.routine-delete-btn:active { color: #ef4444; background: rgba(239,68,68,0.1); }
+.routine-default-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2px 7px;
+  margin-left: 8px;
+  align-self: center;
+}
+.new-routine-btn-row { display: flex; gap: 8px; margin-top: 4px; }
+
+/* ── THEME SWATCHES ── */
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+.theme-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 8px 4px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  transition: border-color 0.15s;
+}
+.theme-swatch.active { border-color: var(--primary); }
+.theme-swatch-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid rgba(128,128,128,0.2);
+}
+.theme-swatch-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  text-align: center;
+}
+.theme-swatch.active .theme-swatch-label { color: var(--text); }
+
 /* ── CUSTOM EXERCISE INLINE ── */
 .custom-input-row { display: flex; gap: 8px; margin-bottom: 10px; }
 .custom-input {
@@ -426,6 +756,41 @@ canvas#chart { width: 100%; border-radius: 12px; display: block; }
   font-size: 14px;
 }
 .custom-input:focus { outline: none; }
+
+/* ── CALENDAR (HISTORY) ── */
+.cal-wrap { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); padding: 14px; margin-bottom: 12px; }
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cal-month-label { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; }
+.cal-nav { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px; padding: 2px 8px; line-height: 1; transition: color 0.15s; }
+.cal-nav:hover { color: var(--text); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-dow { font-size: 9px; font-weight: 700; text-align: center; color: var(--text-muted); padding: 4px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 12px;
+  position: relative;
+  cursor: default;
+  color: var(--text-muted);
+}
+.cal-day.in-month { color: var(--text); }
+.cal-day.has-workout { background: var(--primary-dim); color: var(--primary); font-weight: 700; cursor: pointer; }
+.cal-day.selected { background: var(--primary); color: #fff; font-weight: 700; }
+.cal-day.today:not(.selected) { border: 1px solid var(--border); }
+
+/* ── PR GROUPS (PROGRESS) ── */
+.pr-group { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); margin-bottom: 10px; overflow: hidden; }
+.pr-group-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer; }
+.pr-group-name { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px; }
+.pr-group-meta { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+.pr-group-chevron { color: var(--text-muted); transition: transform 0.2s; font-size: 14px; margin-left: 8px; }
+.pr-group.expanded .pr-group-chevron { transform: rotate(180deg); }
+.pr-group-body { display: none; padding: 0 16px 12px; border-top: 1px solid var(--border); }
+.pr-group.expanded .pr-group-body { display: block; }
 
 /* ── TOAST ── */
 .toast {
@@ -491,6 +856,7 @@ canvas#chart { width: 100%; border-radius: 12px; display: block; }
 <div class="page active" id="page-log"></div>
 <div class="page" id="page-history"></div>
 <div class="page" id="page-progress"></div>
+<div class="page" id="page-trophies"></div>
 <div class="page" id="page-settings"></div>
 
 <div class="toast" id="toast"></div>
@@ -517,6 +883,15 @@ canvas#chart { width: 100%; border-radius: 12px; display: block; }
     </svg>
     <span class="nav-label">Progress</span>
   </button>
+  <button class="nav-tab" onclick="switchTab('trophies',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 21h8M12 17v4"/>
+      <path d="M7 4H5a2 2 0 0 0-2 2v1a4 4 0 0 0 4 4h0"/>
+      <path d="M17 4h2a2 2 0 0 1 2 2v1a4 4 0 0 1-4 4h0"/>
+      <path d="M7 4h10v8a5 5 0 0 1-10 0V4z"/>
+    </svg>
+    <span class="nav-label">Trophies</span>
+  </button>
   <button class="nav-tab" onclick="switchTab('settings',this)">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
@@ -527,6 +902,49 @@ canvas#chart { width: 100%; border-radius: 12px; display: block; }
 </nav>
 
 <script>
+// ── VERSION ──
+// REMINDER: Run .\bump-version.ps1 before making any significant changes.
+const APP_VERSION = 'v1.6';
+
+// ── THEMES ──
+const THEMES = {
+  noir:     { name:'Noir',     dark:true,  primary:'#DC2626', primaryDim:'rgba(220,38,38,0.15)',  accent:'#F59E0B', bg:'#0A0A0A', surface:'#171717', surface2:'#222222', text:'#FAFAFA', textMuted:'#A3A3A3', border:'#2A2A2A' },
+  ocean:    { name:'Ocean',    dark:true,  primary:'#0EA5E9', primaryDim:'rgba(14,165,233,0.15)', accent:'#14B8A6', bg:'#040F1A', surface:'#0C1E2E', surface2:'#132840', text:'#F0F9FF', textMuted:'#7BBFD4', border:'#1E3448' },
+  forest:   { name:'Forest',   dark:true,  primary:'#22C55E', primaryDim:'rgba(34,197,94,0.15)',  accent:'#84CC16', bg:'#030F07', surface:'#0A1F0E', surface2:'#112914', text:'#F0FFF4', textMuted:'#6BBF85', border:'#1A3D22' },
+  sunset:   { name:'Sunset',   dark:true,  primary:'#F97316', primaryDim:'rgba(249,115,22,0.15)', accent:'#EC4899', bg:'#0F0805', surface:'#1E120A', surface2:'#2A1A10', text:'#FFF7ED', textMuted:'#C4916A', border:'#3D2415' },
+  midnight: { name:'Midnight', dark:true,  primary:'#8B5CF6', primaryDim:'rgba(139,92,246,0.15)',accent:'#6366F1', bg:'#05030F', surface:'#0E0A1E', surface2:'#160E2A', text:'#FAF5FF', textMuted:'#A08DC4', border:'#231848' },
+  steel:    { name:'Steel',    dark:true,  primary:'#3B82F6', primaryDim:'rgba(59,130,246,0.15)', accent:'#94A3B8', bg:'#050810', surface:'#0D1120', surface2:'#141A2E', text:'#F8FAFC', textMuted:'#7C93B0', border:'#1E2A42' },
+  clean:    { name:'Clean',    dark:false, primary:'#DC2626', primaryDim:'rgba(220,38,38,0.12)',  accent:'#D97706', bg:'#F5F5F5', surface:'#FFFFFF', surface2:'#F0F0F0', text:'#111111', textMuted:'#737373', border:'#E5E5E5' },
+  sky:      { name:'Sky',      dark:false, primary:'#0284C7', primaryDim:'rgba(2,132,199,0.12)',  accent:'#0D9488', bg:'#F0F9FF', surface:'#FFFFFF', surface2:'#E0F2FE', text:'#0C1A26', textMuted:'#5A8FAA', border:'#BAE6FD' },
+};
+
+function applyTheme(id) {
+  const t = THEMES[id] || THEMES.noir;
+  const r = document.documentElement.style;
+  r.setProperty('--bg',          t.bg);
+  r.setProperty('--surface',     t.surface);
+  r.setProperty('--surface2',    t.surface2);
+  r.setProperty('--primary',     t.primary);
+  r.setProperty('--primary-dim', t.primaryDim);
+  r.setProperty('--accent',      t.accent);
+  r.setProperty('--text',        t.text);
+  r.setProperty('--text-muted',  t.textMuted);
+  r.setProperty('--border',      t.border);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t.primary);
+  localStorage.setItem('gymdash_theme', id);
+}
+
+function initTheme() {
+  const saved = localStorage.getItem('gymdash_theme') || 'noir';
+  applyTheme(saved);
+}
+
+function setTheme(id) {
+  applyTheme(id);
+  renderSettings();
+  showToast(`Theme: ${THEMES[id]?.name || id}`);
+}
+
 // ── TAB SWITCHING ──
 function switchTab(name, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -535,25 +953,228 @@ function switchTab(name, el) {
   el.classList.add('active');
   if (name === 'history') renderHistory();
   if (name === 'progress') renderProgress();
+  if (name === 'trophies') renderTrophies();
   if (name === 'settings') renderSettings();
 }
 
 // ── DEFAULTS ──
 const DEFAULT_ROUTINES = {
+  'Push':        ['Bench Press','Incline Bench Press','Chest Fly','Shoulder Press','Lateral Raises','Tricep Extensions','Dips'],
+  'Pull':        ['Rows','Lat Pulldown','Cable Rows','Face Pulls','Rear Delt Fly','Curls','Hammer Curls'],
+  'Legs':        ['Squat','Leg Press','Leg Extensions','Leg Curls','Calf Raises','Hip Flex','Romanian Deadlift'],
   'Chest':       ['Bench Press','Incline Bench Press','Chest Fly','Lower Chest Fly','Dips','Tricep Extensions'],
-  'Legs':        ['Squat','Leg Press','Leg Extensions','Leg Curls','Calf Raises','Hip Flex'],
   "Back & Bi's": ['Rows','Lat Pulldown','Cable Rows','Curls','Hammer Curls'],
-  'Shoulders':   ['Shoulder Press','Lateral Raises','Rear Delt Fly','Face Pulls']
+  'Shoulders':   ['Shoulder Press','Lateral Raises','Rear Delt Fly','Face Pulls'],
+  'Arms':        ['Curls','Hammer Curls','Tricep Extensions','Tricep Pushdown','Skull Crushers','Cable Curls'],
+  'Full Body':   ['Squat','Bench Press','Rows','Shoulder Press','Romanian Deadlift','Pull-Ups'],
+  'Core':        ['Plank','Crunches','Leg Raises','Russian Twists','Ab Wheel','Cable Crunches'],
 };
+
+const BODYWEIGHT_EXERCISES = new Set([
+  'Dips','Pull-Ups','Push-Ups','Chin-Ups','Plank','Crunches',
+  'Leg Raises','Russian Twists','Ab Wheel','Burpees','Mountain Climbers'
+]);
+
+// ── FORM LINKS (ExRx.net) ──
+const FORM_LINKS = {
+  'Bench Press':         'https://exrx.net/WeightExercises/PectoralSternal/BBBenchPress',
+  'Incline Bench Press': 'https://exrx.net/WeightExercises/PectoralClavicular/BBInclineBenchPress',
+  'Chest Fly':           'https://exrx.net/WeightExercises/PectoralSternal/DBFly',
+  'Dips':                'https://exrx.net/WeightExercises/PectoralSternal/BWChestDip',
+  'Push-Ups':            'https://exrx.net/WeightExercises/PectoralSternal/BWPushup',
+  'Shoulder Press':      'https://exrx.net/WeightExercises/DeltoidAnterior/DBShoulderPress',
+  'Lateral Raises':      'https://exrx.net/WeightExercises/DeltoidLateral/DBLateralRaise',
+  'Rear Delt Fly':       'https://exrx.net/WeightExercises/DeltoidPosterior/DBRearLateralRaise',
+  'Face Pulls':          'https://exrx.net/WeightExercises/DeltoidPosterior/CBStandingRearDeltRowRope',
+  'Curls':               'https://exrx.net/WeightExercises/Biceps/BBCurl',
+  'Hammer Curls':        'https://exrx.net/WeightExercises/Brachioradialis/DBHammerCurl',
+  'Cable Curls':         'https://exrx.net/WeightExercises/Biceps/CBCurl',
+  'Chin-Ups':            'https://exrx.net/WeightExercises/LatissimusDorsi/BWChinUp',
+  'Pull-Ups':            'https://exrx.net/WeightExercises/LatissimusDorsi/BWPullUp',
+  'Lat Pulldown':        'https://exrx.net/WeightExercises/LatissimusDorsi/CBLatPulldown',
+  'Rows':                'https://exrx.net/WeightExercises/BackGeneral/CBSeatedRow',
+  'Tricep Extensions':   'https://exrx.net/WeightExercises/Triceps/BBTriExt',
+  'Tricep Pushdown':     'https://exrx.net/WeightExercises/Triceps/CBPushdown',
+  'Skull Crushers':      'https://exrx.net/WeightExercises/Triceps/BBLyingTriExtSC',
+  'Deadlift':            'https://exrx.net/WeightExercises/ErectorSpinae/BBDeadlift',
+  'Romanian Deadlift':   'https://exrx.net/WeightExercises/ErectorSpinae/BBStiffLegDeadlift',
+  'Squat':               'https://exrx.net/WeightExercises/Quadriceps/BBSquat',
+  'Leg Press':           'https://exrx.net/WeightExercises/Quadriceps/LVSeatedLegPress',
+  'Leg Extensions':      'https://exrx.net/WeightExercises/Quadriceps/LVLegExtension',
+  'Leg Curls':           'https://exrx.net/WeightExercises/Hamstrings/LVLyingLegCurl',
+  'Calf Raises':         'https://exrx.net/WeightExercises/Gastrocnemius/BBStandingCalfRaise',
+  'Crunches':            'https://exrx.net/WeightExercises/RectusAbdominis/BWCrunch',
+  'Plank':               'https://exrx.net/WeightExercises/RectusAbdominis/BWFrontPlank',
+  'Russian Twists':      'https://exrx.net/WeightExercises/Obliques/BWTwistingCrunch',
+  'Leg Raises':          'https://exrx.net/WeightExercises/HipFlexors/BWHangingLegRaise',
+  'Ab Wheel':            'https://exrx.net/WeightExercises/RectusAbdominis/BWAbWheelRollout',
+  'Cable Crunches':      'https://exrx.net/WeightExercises/RectusAbdominis/CBKneelingCrunch',
+};
+
+// ── TROPHIES ──
+// tier: 'bronze' | 'silver' | 'gold' | 'diamond'
+const TROPHY_DEFS = [
+  // — First Steps —
+  {
+    id: 'first_blood',
+    name: 'First Blood',
+    desc: 'Log your first workout',
+    tier: 'bronze',
+    icon: `<path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>`,
+    check: (w) => w.length >= 1,
+  },
+  {
+    id: 'iron_habit',
+    name: 'Iron Habit',
+    desc: 'Complete 10 workouts',
+    tier: 'silver',
+    icon: `<path d="M8 21h8M12 17v4"/><path d="M7 4H5a2 2 0 0 0-2 2v1a4 4 0 0 0 4 4"/><path d="M17 4h2a2 2 0 0 1 2 2v1a4 4 0 0 1-4 4"/><path d="M7 4h10v8a5 5 0 0 1-10 0V4z"/>`,
+    check: (w) => w.length >= 10,
+  },
+  {
+    id: 'centurion',
+    name: 'Centurion',
+    desc: 'Log 100 total workouts',
+    tier: 'gold',
+    icon: `<rect x="3" y="3" width="18" height="18" rx="3"/><text x="12" y="16" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="10" fill="currentColor" stroke="none">100</text>`,
+    check: (w) => w.length >= 100,
+  },
+  // — Consistency —
+  {
+    id: 'three_peat',
+    name: 'Three-Peat',
+    desc: 'Hit a 3-week streak',
+    tier: 'bronze',
+    icon: `<path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>`,
+    check: (w) => computeStreakFromWorkouts(w) >= 3,
+  },
+  {
+    id: 'month_machine',
+    name: 'Month Machine',
+    desc: 'Hit a 4-week streak',
+    tier: 'silver',
+    icon: `<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>`,
+    check: (w) => computeStreakFromWorkouts(w) >= 4,
+  },
+  {
+    id: 'relentless',
+    name: 'Relentless',
+    desc: 'Hit a 12-week streak',
+    tier: 'diamond',
+    icon: `<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>`,
+    check: (w) => computeStreakFromWorkouts(w) >= 12,
+  },
+  // — Lifting Milestones —
+  {
+    id: 'pr_hunter',
+    name: 'PR Hunter',
+    desc: 'Set a personal record on any lift',
+    tier: 'bronze',
+    icon: `<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>`,
+    check: (w) => w.some(s => s.sets.some(x => !x.bodyweight)),
+  },
+  {
+    id: 'plate_math',
+    name: 'Plate Math',
+    desc: 'Hit 135 lbs on any lift (a full bar)',
+    tier: 'silver',
+    icon: `<rect x="4" y="9.5" width="3" height="5" rx="1"/><rect x="17" y="9.5" width="3" height="5" rx="1"/><rect x="2" y="11" width="2" height="2" rx="0.5"/><rect x="20" y="11" width="2" height="2" rx="0.5"/><line x1="7" y1="12" x2="17" y2="12"/>`,
+    check: (w) => w.some(s => s.sets.some(x => x.weight >= 135)),
+  },
+  {
+    id: 'two_plates',
+    name: 'Two Plates',
+    desc: 'Hit 225 lbs on any lift',
+    tier: 'gold',
+    icon: `<rect x="3" y="8" width="4" height="8" rx="1"/><rect x="17" y="8" width="4" height="8" rx="1"/><rect x="1" y="10" width="2" height="4" rx="0.5"/><rect x="21" y="10" width="2" height="4" rx="0.5"/><line x1="7" y1="12" x2="17" y2="12" stroke-width="2.5"/>`,
+    check: (w) => w.some(s => s.sets.some(x => x.weight >= 225)),
+  },
+  {
+    id: 'three_plates',
+    name: 'Three Plates',
+    desc: 'Hit 315 lbs on any lift',
+    tier: 'diamond',
+    icon: `<rect x="3" y="7" width="4" height="10" rx="1"/><rect x="17" y="7" width="4" height="10" rx="1"/><rect x="1" y="9" width="2" height="6" rx="0.5"/><rect x="21" y="9" width="2" height="6" rx="0.5"/><line x1="7" y1="12" x2="17" y2="12" stroke-width="3"/>`,
+    check: (w) => w.some(s => s.sets.some(x => x.weight >= 315)),
+  },
+  // — Volume —
+  {
+    id: 'grease_the_groove',
+    name: 'Grease the Groove',
+    desc: 'Log 50 total sets in one session',
+    tier: 'silver',
+    icon: `<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>`,
+    check: (w) => w.some(s => s.sets.length >= 50),
+  },
+  {
+    id: 'tonnage',
+    name: 'Tonnage',
+    desc: 'Lift 10,000 lbs total volume in one session',
+    tier: 'gold',
+    icon: `<path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="M13 13l6 6"/>`,
+    check: (w) => w.some(s => s.sets.reduce((sum, x) => sum + (x.weight * x.reps), 0) >= 10000),
+  },
+  // — Variety —
+  {
+    id: 'full_split',
+    name: 'Full Split',
+    desc: 'Complete every default routine at least once',
+    tier: 'gold',
+    icon: `<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>`,
+    check: (w) => {
+      const done = new Set(w.flatMap(s => s.sets.map(x => x.routine).filter(Boolean)));
+      return Object.keys(DEFAULT_ROUTINES).every(r => done.has(r));
+    },
+  },
+  {
+    id: 'leg_day_lifer',
+    name: 'Leg Day Lifer',
+    desc: 'Complete 10 Legs workouts',
+    tier: 'silver',
+    icon: `<path d="M8 3H5l3 9-4 9h4l2-4h4l2 4h4l-4-9 3-9h-3l-2 6h-3z"/>`,
+    check: (w) => w.filter(s => s.sets.some(x => x.routine === 'Legs')).length >= 10,
+  },
+];
+
+function computeStreakFromWorkouts(workouts) {
+  if (!workouts.length) return 0;
+  const weeks = new Set(workouts.map(w => {
+    const d = parseIso(w.date);
+    const jan1 = new Date(d.getFullYear(), 0, 1);
+    return d.getFullYear() + '-' + Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+  }));
+  const sorted = [...weeks].sort();
+  let streak = 1, best = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    const [y1, w1] = sorted[i-1].split('-').map(Number);
+    const [y2, w2] = sorted[i].split('-').map(Number);
+    const consecutive = (y1 === y2 && w2 === w1 + 1) || (y2 === y1 + 1 && w1 >= 52 && w2 === 1);
+    if (consecutive) { streak++; best = Math.max(best, streak); } else streak = 1;
+  }
+  return best;
+}
+
+function computeTrophies() {
+  const { workouts } = getData();
+  return TROPHY_DEFS.map(t => ({ ...t, earned: t.check(workouts) }));
+}
 
 // ── STORAGE ──
 function getData() {
-  const workouts  = JSON.parse(localStorage.getItem('gymdash_workouts')  || '[]');
-  const routines  = JSON.parse(localStorage.getItem('gymdash_routines')  || 'null') || DEFAULT_ROUTINES;
+  const workouts = JSON.parse(localStorage.getItem('gymdash_workouts') || '[]');
+  let routines   = JSON.parse(localStorage.getItem('gymdash_routines') || 'null') || DEFAULT_ROUTINES;
+  // Merge any new default routines not yet saved
+  let changed = false;
+  Object.entries(DEFAULT_ROUTINES).forEach(([name, exercises]) => {
+    if (!routines[name]) { routines[name] = exercises; changed = true; }
+  });
+  if (changed) saveRoutines(routines);
   return { workouts, routines };
 }
 function saveWorkouts(arr) { localStorage.setItem('gymdash_workouts', JSON.stringify(arr)); }
 function saveRoutines(obj) { localStorage.setItem('gymdash_routines', JSON.stringify(obj)); }
+function saveSession()     { localStorage.setItem('gymdash_session',  JSON.stringify({ sets: currentSession, routine: currentRoutine, date: isoDate(new Date()) })); }
+function clearSession()    { localStorage.removeItem('gymdash_session'); }
 
 // ── WEEK HELPERS ──
 function getWeekBounds(date) {
@@ -619,12 +1240,14 @@ function computePRs() {
   const exSessions = {};
   sorted.forEach(w => {
     w.sets.forEach(s => {
+      if (s.bodyweight) return;
       if (!prMap[s.exercise] || s.weight > prMap[s.exercise].max) {
         prMap[s.exercise] = { max: s.weight, prev: prMap[s.exercise]?.max || null };
       }
     });
     const exInSession = {};
     w.sets.forEach(s => {
+      if (s.bodyweight) return;
       if (!exInSession[s.exercise] || s.weight > exInSession[s.exercise]) exInSession[s.exercise] = s.weight;
     });
     Object.entries(exInSession).forEach(([ex, wt]) => {
@@ -665,12 +1288,22 @@ function generateId() {
 // ── LOG STATE ──
 let currentSession = [];
 let currentRoutine = 'Chest';
+let sessionGroupCollapsed = new Set();
 
 const DAY_ROUTINE = { 1:'Chest', 2:'Legs', 3:"Back & Bi's", 5:'Shoulders' };
 
 function initLog() {
-  const day = new Date().getDay();
-  currentRoutine = DAY_ROUTINE[day] || 'Chest';
+  const day   = new Date().getDay();
+  const saved = JSON.parse(localStorage.getItem('gymdash_session') || 'null');
+  const today = isoDate(new Date());
+  if (saved && saved.date === today) {
+    currentSession = saved.sets || [];
+    currentRoutine = saved.routine || DAY_ROUTINE[day] || 'Chest';
+  } else {
+    if (saved) clearSession(); // stale session from a previous day
+    currentSession = [];
+    currentRoutine = DAY_ROUTINE[day] || 'Chest';
+  }
   renderLog();
 }
 
@@ -713,11 +1346,12 @@ function renderLog() {
         ${(routines[currentRoutine] || []).map(e => `<option value="${e}">${e}</option>`).join('')}
         <option value="__custom__">＋ Add Custom...</option>
       </select>
+      <a id="formLinkBtn" href="" target="_blank" rel="noopener noreferrer" class="form-link-btn" style="display:none">ℹ️ Form Guide</a>
       <div id="customInputRow" style="display:none" class="custom-input-row">
         <input class="custom-input" id="customExName" placeholder="Exercise name..." />
       </div>
       <div class="input-row">
-        <div>
+        <div id="weightGroup">
           <input class="input-field" id="inputWeight" placeholder="0" type="number" min="0" inputmode="decimal" />
           <span class="input-label">lbs</span>
         </div>
@@ -733,20 +1367,67 @@ function renderLog() {
       <button class="btn-primary" onclick="addSet()">+ Add Set</button>
     </div>
 
-    ${currentSession.length > 0 ? `
-    <div class="card" id="sessionCard">
-      <div class="card-label">Today's Sets</div>
-      ${currentSession.map((s, i) => `
-        <div class="set-row">
-          <div class="set-dot"></div>
-          <div class="set-name">${s.exercise}</div>
-          <div class="set-meta">${s.weight} × ${s.reps}</div>
-          <button class="set-delete" onclick="removeSet(${i})">✕</button>
-        </div>
-      `).join('')}
-      <button class="btn-outline" onclick="finishWorkout()">✓ Finish Workout</button>
-    </div>` : ''}
+    ${currentSession.length > 0 ? buildSessionCard() : ''}
   `;
+  updateWeightVisibility();
+  updateFormLink();
+}
+
+function buildSessionCard() {
+  const grouped = {};
+  const groupOrder = [];
+  currentSession.forEach((s, i) => {
+    if (!grouped[s.exercise]) { grouped[s.exercise] = []; groupOrder.push(s.exercise); }
+    grouped[s.exercise].push({ ...s, idx: i });
+  });
+  const rows = groupOrder.map(ex => {
+    const safeEx = ex.replace(/[^a-z0-9]/gi, '_');
+    const expanded = !sessionGroupCollapsed.has(safeEx);
+    const setCount = grouped[ex].length;
+    return `
+    <div class="session-group ${expanded ? 'expanded' : ''}" id="sg-${safeEx}">
+      <div class="session-group-header" onclick="toggleSessionGroup('${safeEx}')">
+        <span>${ex} <span style="font-weight:400;opacity:0.7">(${setCount})</span></span>
+        <span class="session-group-chevron">▼</span>
+      </div>
+      <div class="session-group-body">
+        ${grouped[ex].map((s, j) => `
+          <div class="set-row">
+            <div class="set-dot"></div>
+            <div class="set-name">Set ${j + 1}</div>
+            <div class="set-meta">${s.bodyweight ? 'BW' : s.weight + ' lbs'} × ${s.reps} reps</div>
+            <button class="set-delete" onclick="removeSet(${s.idx})">✕</button>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  return `
+    <div class="card" id="sessionCard">
+      <div class="card-label">Today's Sets (${currentSession.length})</div>
+      ${rows}
+      <button class="btn-outline" onclick="finishWorkout()">✓ Finish Workout</button>
+    </div>`;  
+}
+
+function updateWeightVisibility() {
+  const sel = document.getElementById('exerciseSelect');
+  const wg  = document.getElementById('weightGroup');
+  if (!sel || !wg) return;
+  wg.style.display = BODYWEIGHT_EXERCISES.has(sel.value) ? 'none' : '';
+}
+
+function updateFormLink() {
+  const sel = document.getElementById('exerciseSelect');
+  const btn = document.getElementById('formLinkBtn');
+  if (!sel || !btn) return;
+  const url = FORM_LINKS[sel.value];
+  if (url) {
+    btn.href = url;
+    btn.style.display = '';
+  } else {
+    btn.style.display = 'none';
+  }
 }
 
 function selectRoutine(name) {
@@ -756,6 +1437,8 @@ function selectRoutine(name) {
 
 function onExerciseChange(sel) {
   document.getElementById('customInputRow').style.display = sel.value === '__custom__' ? 'flex' : 'none';
+  updateWeightVisibility();
+  updateFormLink();
 }
 
 function addSet() {
@@ -765,30 +1448,36 @@ function addSet() {
     exercise = (document.getElementById('customExName')?.value || '').trim();
     if (!exercise) { showToast('Enter a custom exercise name'); return; }
   }
-  const weight = parseFloat(document.getElementById('inputWeight').value);
+  const isBW   = BODYWEIGHT_EXERCISES.has(exercise);
+  const weight = isBW ? 0 : parseFloat(document.getElementById('inputWeight').value);
   const reps   = parseInt(document.getElementById('inputReps').value);
   const sets   = parseInt(document.getElementById('inputSets').value) || 1;
-  if (!weight || !reps) { showToast('Enter weight and reps'); return; }
-  for (let i = 0; i < sets; i++) currentSession.push({ exercise, weight, reps });
+  if ((!isBW && !weight) || !reps) { showToast('Enter weight and reps'); return; }
+  for (let i = 0; i < sets; i++) currentSession.push({ exercise, weight, reps, bodyweight: isBW, routine: currentRoutine });
+  saveSession();
   renderLog();
 }
 
 function removeSet(i) {
   currentSession.splice(i, 1);
+  saveSession();
   renderLog();
 }
 
 function finishWorkout() {
   if (!currentSession.length) return;
   const { workouts } = getData();
+  const usedRoutines = [...new Set(currentSession.map(s => s.routine).filter(Boolean))];
+  const routineLabel = usedRoutines.length ? usedRoutines.join(' + ') : currentRoutine;
   workouts.unshift({
     id: generateId(),
     date: isoDate(new Date()),
-    routine: currentRoutine,
+    routine: routineLabel,
     sets: [...currentSession]
   });
   saveWorkouts(workouts);
   currentSession = [];
+  clearSession();
   autoBackup(workouts);
   const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
   showToast(isIOS ? 'Saved! Tap Share → Save to Files to backup.' : 'Workout saved! Backup downloaded.');
@@ -845,51 +1534,128 @@ function showToast(msg) {
 }
 
 // ── HISTORY ──
+let historyMonth = new Date();
+let selectedHistoryDate = null;
+
 function renderHistory() {
   const { workouts } = getData();
   const page = document.getElementById('page-history');
-  if (!workouts.length) {
-    page.innerHTML = `<div class="section-heading">Recent Sessions</div>
-      <p style="color:var(--text-muted);font-size:14px">No sessions logged yet.</p>`;
-    return;
+
+  const workoutDates = new Set(workouts.map(w => w.date));
+
+  // Build calendar
+  const y = historyMonth.getFullYear();
+  const m = historyMonth.getMonth();
+  const monthLabel = historyMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const firstDay = new Date(y, m, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  const todayStr = isoDate(new Date());
+
+  const dowHeaders = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d =>
+    `<div class="cal-dow">${d}</div>`).join('');
+
+  let dayCells = '';
+  for (let i = 0; i < firstDay; i++) dayCells += `<div class="cal-day"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const hasWorkout = workoutDates.has(dateStr);
+    const isSelected = dateStr === selectedHistoryDate;
+    const isToday    = dateStr === todayStr;
+    const classes = ['cal-day','in-month', hasWorkout?'has-workout':'', isSelected?'selected':'', isToday?'today':''].filter(Boolean).join(' ');
+    const onclick  = hasWorkout ? `onclick="selectHistoryDay('${dateStr}')"` : '';
+    dayCells += `<div class="${classes}" ${onclick}>${d}</div>`;
   }
 
-  const cards = workouts.map((w, idx) => {
-    const d = parseIso(w.date);
-    const dateLabel = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-    const exercises = [...new Set(w.sets.map(s => s.exercise))];
-
-    const grouped = {};
-    w.sets.forEach(s => {
-      if (!grouped[s.exercise]) grouped[s.exercise] = [];
-      grouped[s.exercise].push(s);
-    });
-    const detailHtml = Object.entries(grouped).map(([ex, sets]) => `
-      <div class="detail-group">
-        <div class="detail-group-name">${ex}</div>
-        ${sets.map((s,i) => `
-          <div class="detail-set-row">
-            <span class="detail-set-label">Set ${i+1}</span>
-            <span class="detail-set-val">${s.weight} lbs × ${s.reps} reps</span>
-          </div>
-        `).join('')}
+  const calHtml = `
+    <div class="cal-wrap">
+      <div class="cal-header">
+        <button class="cal-nav" onclick="prevHistoryMonth()">&#8249;</button>
+        <div class="cal-month-label">${monthLabel}</div>
+        <button class="cal-nav" onclick="nextHistoryMonth()">&#8250;</button>
       </div>
-    `).join('');
+      <div class="cal-grid">${dowHeaders}${dayCells}</div>
+    </div>`;
 
-    return `
-      <div class="session-card" onclick="toggleSession(this)">
-        <div class="session-header">
-          <div class="session-date">${dateLabel}</div>
-          <div class="session-badge">${w.routine}</div>
-        </div>
-        <div class="session-tags">
-          ${exercises.map(e => `<span class="session-tag">${e}</span>`).join('')}
-        </div>
-        <div class="session-detail">${detailHtml}</div>
-      </div>`;
-  }).join('');
+  // Session detail area
+  let sessionsHtml = '';
+  if (selectedHistoryDate) {
+    const w = workouts.find(w => w.date === selectedHistoryDate);
+    if (w) {
+      sessionsHtml = `<div class="section-heading">Session — ${parseIso(selectedHistoryDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+        ${buildSessionDetailCard(w, true)}`;
+    }
+  } else {
+    if (!workouts.length) {
+      sessionsHtml = `<p style="color:var(--text-muted);font-size:14px;padding:8px 0">No sessions logged yet.</p>`;
+    } else {
+      const recent = workouts.slice(0, 10);
+      sessionsHtml = `<div class="section-heading">Recent Sessions</div>${recent.map(w => buildSessionDetailCard(w, false)).join('')}`;
+    }
+  }
 
-  page.innerHTML = `<div class="section-heading">Recent Sessions</div>${cards}`;
+  page.innerHTML = calHtml + sessionsHtml;
+}
+
+function buildSessionDetailCard(w, expanded) {
+  const d = parseIso(w.date);
+  const dateLabel = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  const exercises = [...new Set(w.sets.map(s => s.exercise))];
+  const grouped = {};
+  w.sets.forEach(s => {
+    if (!grouped[s.exercise]) grouped[s.exercise] = [];
+    grouped[s.exercise].push(s);
+  });
+  const detailHtml = Object.entries(grouped).map(([ex, sets]) => `
+    <div class="detail-group">
+      <div class="detail-group-name">${ex}</div>
+      ${sets.map((s,i) => `
+        <div class="detail-set-row">
+          <span class="detail-set-label">Set ${i+1}</span>
+          <span class="detail-set-val">${s.bodyweight ? 'BW' : s.weight + ' lbs'} × ${s.reps} reps</span>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+  return `
+    <div class="session-card ${expanded?'expanded':''}" onclick="toggleSession(this)">
+      <div class="session-header">
+        <div class="session-date">${dateLabel}</div>
+        <div class="session-badges">${(Array.isArray(w.routine)?w.routine:w.routine.split(' + ')).map(r=>`<div class="session-badge">${r}</div>`).join('')}</div>
+      </div>
+      <div class="session-tags">${exercises.map(e=>`<span class="session-tag">${e}</span>`).join('')}</div>
+      <div class="session-detail">
+        ${detailHtml}
+        <button class="btn-outline" style="margin-top:12px;border-color:var(--primary);color:var(--primary)" onclick="event.stopPropagation();deleteWorkout('${w.id}')">&#128465; Delete Session</button>
+      </div>
+    </div>`;
+}
+
+function deleteWorkout(id) {
+  if (!confirm('Delete this session? This cannot be undone.')) return;
+  const { workouts } = getData();
+  const updated = workouts.filter(w => w.id !== id);
+  saveWorkouts(updated);
+  if (selectedHistoryDate) {
+    const still = updated.find(w => w.date === selectedHistoryDate);
+    if (!still) selectedHistoryDate = null;
+  }
+  showToast('Session deleted.');
+  renderHistory();
+}
+
+function prevHistoryMonth() {
+  historyMonth = new Date(historyMonth.getFullYear(), historyMonth.getMonth() - 1, 1);
+  selectedHistoryDate = null;
+  renderHistory();
+}
+function nextHistoryMonth() {
+  historyMonth = new Date(historyMonth.getFullYear(), historyMonth.getMonth() + 1, 1);
+  selectedHistoryDate = null;
+  renderHistory();
+}
+function selectHistoryDay(dateStr) {
+  selectedHistoryDate = selectedHistoryDate === dateStr ? null : dateStr;
+  renderHistory();
 }
 
 function toggleSession(card) {
@@ -911,19 +1677,49 @@ function renderProgress() {
     return;
   }
 
-  const prRows = prs.map(p => {
-    let trendHtml = '';
-    if (p.trend === null) trendHtml = `<div class="pr-trend">—</div>`;
-    else if (p.trend > 0) trendHtml = `<div class="pr-trend up">↑ +${p.trend} lbs</div>`;
-    else if (p.trend < 0) trendHtml = `<div class="pr-trend down">↓ ${p.trend} lbs</div>`;
-    else trendHtml = `<div class="pr-trend">→ same</div>`;
-    return `<div class="pr-row">
-      <div class="pr-name">${p.exercise}</div>
-      <div class="pr-right">
-        <div class="pr-weight">${p.max} lbs</div>
-        ${trendHtml}
-      </div>
-    </div>`;
+  // Group PRs by routine
+  const prByRoutine = {};
+  const routineOrder = Object.keys(DEFAULT_ROUTINES);
+  prs.forEach(p => {
+    let bucket = 'Other';
+    for (const [rName, exList] of Object.entries(DEFAULT_ROUTINES)) {
+      if (exList.some(e => e.toLowerCase() === p.exercise.toLowerCase())) { bucket = rName; break; }
+    }
+    if (!prByRoutine[bucket]) prByRoutine[bucket] = [];
+    prByRoutine[bucket].push(p);
+  });
+
+  const orderedGroups = [...routineOrder.filter(r => prByRoutine[r]), ...(prByRoutine['Other'] ? ['Other'] : [])];
+
+  const groupHtml = orderedGroups.map(groupName => {
+    const items = prByRoutine[groupName];
+    const topMax = Math.max(...items.map(p => p.max));
+    const rows = items.map(p => {
+      let trendHtml = '';
+      if (p.trend === null) trendHtml = `<div class="pr-trend">—</div>`;
+      else if (p.trend > 0) trendHtml = `<div class="pr-trend up">↑ +${p.trend} lbs</div>`;
+      else if (p.trend < 0) trendHtml = `<div class="pr-trend down">↓ ${p.trend} lbs</div>`;
+      else trendHtml = `<div class="pr-trend">→ same</div>`;
+      return `<div class="pr-row">
+        <div class="pr-name">${p.exercise}</div>
+        <div class="pr-right">
+          <div class="pr-weight">${p.max} lbs</div>
+          ${trendHtml}
+        </div>
+      </div>`;
+    }).join('');
+    const safeId = groupName.replace(/[^a-z]/gi,'_');
+    return `
+      <div class="pr-group" id="prg-${safeId}">
+        <div class="pr-group-header" onclick="togglePRGroup('${safeId}')">
+          <div class="pr-group-name">${groupName}</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <div class="pr-group-meta">${items.length} exercise${items.length!==1?'s':''} · top ${topMax} lbs</div>
+            <div class="pr-group-chevron">▼</div>
+          </div>
+        </div>
+        <div class="pr-group-body">${rows}</div>
+      </div>`;
   }).join('');
 
   const allExercises = [...new Set(workouts.flatMap(w => w.sets.map(s => s.exercise)))].sort();
@@ -931,8 +1727,7 @@ function renderProgress() {
 
   page.innerHTML = `
     <div class="section-heading">Personal Records</div>
-    <div class="card">${prRows}</div>
-
+    ${groupHtml}
     <div class="section-heading">Exercise Trend</div>
     <div class="card">
       <div class="chart-controls">
@@ -948,6 +1743,23 @@ function renderProgress() {
     </div>
   `;
   drawChart();
+}
+
+function togglePRGroup(safeId) {
+  document.getElementById('prg-' + safeId).classList.toggle('expanded');
+}
+
+function toggleSessionGroup(safeEx) {
+  const el = document.getElementById('sg-' + safeEx);
+  if (!el) return;
+  const wasExpanded = el.classList.contains('expanded');
+  if (wasExpanded) {
+    sessionGroupCollapsed.add(safeEx);
+    el.classList.remove('expanded');
+  } else {
+    sessionGroupCollapsed.delete(safeEx);
+    el.classList.add('expanded');
+  }
 }
 
 function onChartExChange(sel) {
@@ -1024,16 +1836,87 @@ function drawChart() {
   });
 }
 
+// ── TROPHIES RENDER ──
+function renderTrophies() {
+  const page = document.getElementById('page-trophies');
+  const trophies = computeTrophies();
+  const earned = trophies.filter(t => t.earned);
+  const pct = Math.round((earned.length / trophies.length) * 100);
+
+  const TIER_COLORS = {
+    bronze:  '#cd7f32',
+    silver:  '#a8b0bf',
+    gold:    '#f5c518',
+    diamond: '#7dd3fc',
+  };
+  const TIER_LABEL = { bronze: 'Bronze', silver: 'Silver', gold: 'Gold', diamond: 'Diamond' };
+
+  // Group by category using position in TROPHY_DEFS
+  const GROUPS = [
+    { label: 'First Steps',       ids: ['first_blood','iron_habit','centurion'] },
+    { label: 'Consistency',       ids: ['three_peat','month_machine','relentless'] },
+    { label: 'Lifting Milestones',ids: ['pr_hunter','plate_math','two_plates','three_plates'] },
+    { label: 'Volume & Variety',  ids: ['grease_the_groove','tonnage','full_split','leg_day_lifer'] },
+  ];
+
+  const trophyMap = Object.fromEntries(trophies.map(t => [t.id, t]));
+
+  const groupsHtml = GROUPS.map(g => {
+    const cards = g.ids.map(id => {
+      const t = trophyMap[id];
+      if (!t) return '';
+      const color = TIER_COLORS[t.tier];
+      const earnedClass = t.earned ? 'earned' : 'locked';
+      return `
+        <div class="trophy-card ${earnedClass}" style="--trophy-color:${color}">
+          <span class="trophy-tier-badge">${TIER_LABEL[t.tier]}</span>
+          <div class="trophy-icon-wrap">
+            <svg viewBox="0 0 24 24">${t.icon}</svg>
+          </div>
+          <div class="trophy-name">${t.name}</div>
+          <div class="trophy-desc">${t.desc}</div>
+        </div>`;
+    }).join('');
+    return `<div class="trophy-section-label">${g.label}</div><div class="trophy-grid">${cards}</div>`;
+  }).join('');
+
+  page.innerHTML = `
+    <div class="trophy-summary">
+      <div class="trophy-summary-count">${earned.length}</div>
+      <div class="trophy-summary-text">
+        <div class="trophy-summary-label">Trophies Earned</div>
+        <div class="trophy-summary-sub">${trophies.length - earned.length} remaining to unlock</div>
+        <div class="trophy-progress-bar">
+          <div class="trophy-progress-fill" style="width:${pct}%"></div>
+        </div>
+      </div>
+    </div>
+    ${groupsHtml}
+  `;
+}
+
 // ── SETTINGS ──
+let newRoutineExercises = [];
+
 function renderSettings() {
   const { routines } = getData();
   const page = document.getElementById('page-settings');
+  const isDefault = name => Object.prototype.hasOwnProperty.call(DEFAULT_ROUTINES, name);
 
-  const routineCards = Object.entries(routines).map(([name, exercises]) => `
-    <div class="routine-card" id="rc-${name.replace(/[^a-z]/gi,'_')}">
-      <div class="routine-header" data-id="${name.replace(/[^a-z]/gi,'_')}" onclick="toggleRoutine(this.dataset.id)">
-        <div class="routine-name">${name}</div>
-        <div class="routine-chevron">▼</div>
+  const routineCards = Object.entries(routines).map(([name, exercises]) => {
+    const safeId = name.replace(/[^a-z]/gi,'_');
+    const def = isDefault(name);
+    return `
+    <div class="routine-card" id="rc-${safeId}">
+      <div class="routine-header" data-id="${safeId}" onclick="toggleRoutine(this.dataset.id)">
+        <div style="display:flex;align-items:center;gap:4px">
+          <div class="routine-name">${name}</div>
+          ${def ? `<span class="routine-default-badge">default</span>` : ''}
+        </div>
+        <div style="display:flex;align-items:center">
+          ${!def ? `<button class="routine-delete-btn" onclick="event.stopPropagation();deleteRoutine('${name}')" title="Delete routine">✕</button>` : ''}
+          <div class="routine-chevron">▼</div>
+        </div>
       </div>
       <div class="routine-body">
         ${exercises.map((e, i) => `
@@ -1043,16 +1926,47 @@ function renderSettings() {
           </div>
         `).join('')}
         <div class="add-exercise-row" style="margin-top:12px">
-          <input class="add-exercise-input" id="addEx-${name.replace(/[^a-z]/gi,'_')}" placeholder="New exercise name..." />
+          <input class="add-exercise-input" id="addEx-${safeId}" placeholder="New exercise name..." />
           <button class="btn-sm" data-routine="${name}" onclick="addExercise(this.dataset.routine)">Add</button>
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
+
+  const newRoutineForm = `
+    <div class="new-routine-card" id="newRoutineForm" style="display:none">
+      <div class="card-label">New Routine</div>
+      <div class="new-routine-name-row">
+        <input class="new-routine-name-input" id="newRoutineName" placeholder="Routine name..." />
+      </div>
+      <div class="new-routine-ex-list" id="newRoutineExList"></div>
+      <div class="add-exercise-row" style="margin-bottom:12px">
+        <input class="add-exercise-input" id="newRoutineExInput" placeholder="Add exercise..." onkeydown="if(event.key==='Enter')addNewRoutineEx()" />
+        <button class="btn-sm" onclick="addNewRoutineEx()">Add</button>
+      </div>
+      <div class="new-routine-btn-row">
+        <button class="btn-primary" style="flex:1" onclick="saveNewRoutine()">✓ Save Routine</button>
+        <button class="btn-outline" style="margin-top:0;flex:1" onclick="cancelNewRoutine()">Cancel</button>
+      </div>
+    </div>`;
 
   page.innerHTML = `
     <div class="section-heading">Routines</div>
+    ${newRoutineForm}
     ${routineCards}
+    <button class="btn-outline" id="addRoutineBtn" onclick="showNewRoutineForm()" style="width:100%;margin-bottom:10px">＋ New Routine</button>
+    <div class="section-heading" style="margin-top:8px">Theme</div>
+    <div class="card">
+      <div class="card-label">Color Theme</div>
+      <div class="theme-grid">
+        ${Object.entries(THEMES).map(([id, t]) => `
+          <div class="theme-swatch ${localStorage.getItem('gymdash_theme')=== id || (!localStorage.getItem('gymdash_theme') && id==='noir') ? 'active' : ''}" onclick="setTheme('${id}')">
+            <div class="theme-swatch-dot" style="background:${t.primary};border-color:${t.accent}"></div>
+            <div class="theme-swatch-label">${t.name}${t.dark?'':' ☀'}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
     <div class="section-heading" style="margin-top:8px">Data</div>
     <div class="card">
       <div class="card-label">Import / Export</div>
@@ -1062,6 +1976,11 @@ function renderSettings() {
         <button class="btn-outline" onclick="exportCSV()" style="margin-top:0">⬇ Export CSV</button>
       </div>
       <input type="file" id="csvFileInput" style="display:none" onchange="handleImport(this)" />
+    </div>
+    <div class="section-heading" style="margin-top:8px">About</div>
+    <div class="card">
+      <div class="card-label">App Version</div>
+      <p style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--primary);margin-top:6px">${APP_VERSION}</p>
     </div>
   `;
 }
@@ -1089,6 +2008,72 @@ function addExercise(routineName) {
     showToast(`Added "${name}" to ${routineName}`);
   }
   renderSettings();
+}
+
+function deleteRoutine(name) {
+  if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+  const { routines } = getData();
+  delete routines[name];
+  saveRoutines(routines);
+  // Reset currentRoutine if it was the deleted one
+  if (currentRoutine === name) {
+    currentRoutine = Object.keys(getData().routines)[0] || 'Chest';
+  }
+  showToast(`Deleted "${name}"`);
+  renderSettings();
+}
+
+function showNewRoutineForm() {
+  newRoutineExercises = [];
+  document.getElementById('newRoutineForm').style.display = '';
+  document.getElementById('addRoutineBtn').style.display = 'none';
+  document.getElementById('newRoutineName').focus();
+  renderNewRoutineChips();
+}
+
+function cancelNewRoutine() {
+  newRoutineExercises = [];
+  document.getElementById('newRoutineForm').style.display = 'none';
+  document.getElementById('addRoutineBtn').style.display = '';
+}
+
+function addNewRoutineEx() {
+  const input = document.getElementById('newRoutineExInput');
+  const val = (input?.value || '').trim();
+  if (!val) return;
+  if (!newRoutineExercises.includes(val)) newRoutineExercises.push(val);
+  input.value = '';
+  input.focus();
+  renderNewRoutineChips();
+}
+
+function removeNewRoutineEx(idx) {
+  newRoutineExercises.splice(idx, 1);
+  renderNewRoutineChips();
+}
+
+function renderNewRoutineChips() {
+  const container = document.getElementById('newRoutineExList');
+  if (!container) return;
+  container.innerHTML = newRoutineExercises.map((ex, i) => `
+    <span class="new-routine-ex-chip">
+      ${ex}
+      <button onclick="removeNewRoutineEx(${i})">✕</button>
+    </span>`).join('');
+}
+
+function saveNewRoutine() {
+  const name = (document.getElementById('newRoutineName')?.value || '').trim();
+  if (!name) { showToast('Enter a routine name'); return; }
+  if (!newRoutineExercises.length) { showToast('Add at least one exercise'); return; }
+  const { routines } = getData();
+  if (routines[name]) { showToast('A routine with that name already exists'); return; }
+  routines[name] = [...newRoutineExercises];
+  saveRoutines(routines);
+  showToast(`"${name}" saved!`);
+  newRoutineExercises = [];
+  renderSettings();
+  renderLog(); // so new routine appears in Log pill row immediately
 }
 
 function triggerImport() {
@@ -1122,15 +2107,8 @@ function exportCSV() {
 }
 
 // ── CSV IMPORT ──
-const ROUTINE_MAP = {
-  'Chest':       ['Bench Press','Incline Bench Press','Chest Fly','Lower Chest Fly','Dips','Tricep Extensions'],
-  'Legs':        ['Squat','Leg Press','Leg Extensions','Leg Curls','Calf Raises','Hip Flex'],
-  "Back & Bi's": ['Rows','Lat Pulldown','Cable Rows','Curls','Hammer Curls'],
-  'Shoulders':   ['Shoulder Press','Lateral Raises','Rear Delt Fly','Face Pulls']
-};
-
 function inferRoutine(exercises) {
-  const counts = Object.entries(ROUTINE_MAP).map(([routine, exList]) => ({
+  const counts = Object.entries(DEFAULT_ROUTINES).map(([routine, exList]) => ({
     routine,
     count: exercises.filter(e => exList.some(r => e.toLowerCase().includes(r.toLowerCase()))).length
   }));
@@ -1196,6 +2174,7 @@ if ('serviceWorker' in navigator) {
 // ── INIT ──
 document.getElementById('topbarDate').textContent =
   new Date().toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+initTheme();
 initLog();
 </script>
 </body>
