@@ -97,6 +97,20 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+.topbar-gear {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.topbar-gear:active, .topbar-gear.active { color: var(--primary); }
 
 /* ── PAGES ── */
 .page { display: none; flex: 1; overflow-y: auto; padding: 16px 16px 96px; }
@@ -550,18 +564,39 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 0;
+  padding: 10px 0;
   border-bottom: 1px solid var(--border);
+  gap: 8px;
 }
 .pr-row:last-child { border-bottom: none; }
-.pr-name { font-size: 14px; font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 8px; }
-.pr-right { text-align: right; flex-shrink: 0; }
+.pr-name { font-size: 14px; font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pr-mid { flex-shrink: 0; }
+.pr-right { text-align: right; flex-shrink: 0; min-width: 64px; }
 .pr-weight { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--accent); line-height: 1; }
 .pr-trend { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
 .pr-trend.up { color: var(--green); }
 .pr-trend.down { color: var(--primary); }
+.pr-sparkline { display: block; }
 
-/* ── CHART ── */
+/* ── 1RM PANEL ── */
+.orm-row {
+  display: flex;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 10px;
+}
+.orm-row:last-child { border-bottom: none; }
+.orm-rank { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); width: 20px; flex-shrink: 0; }
+.orm-name { font-size: 14px; font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.orm-right { text-align: right; flex-shrink: 0; }
+.orm-val { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--primary); line-height: 1; }
+.orm-source { font-size: 10px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+
+/* ── VOLUME CHART ── */
+.vol-chart-wrap { width: 100%; }
+canvas.volume-canvas { width: 100%; display: block; }
+canvas#chart { width: 100%; border-radius: 12px; display: block; }
 .chart-controls { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
 .chart-toggle { display: flex; background: var(--surface2); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; flex-shrink: 0; }
 .chart-toggle-btn {
@@ -575,8 +610,6 @@ body {
   transition: all 0.15s;
 }
 .chart-toggle-btn.active { background: var(--primary); color: white; }
-
-canvas#chart { width: 100%; border-radius: 12px; display: block; }
 
 /* ── SETTINGS ── */
 .routine-card {
@@ -636,6 +669,28 @@ canvas#chart { width: 100%; border-radius: 12px; display: block; }
 
 .data-btn-row { display: flex; gap: 10px; margin-top: 10px; }
 .data-btn-row .btn-outline { margin-top: 0; }
+
+/* ── COLLAPSIBLE SETTINGS SECTIONS ── */
+.settings-section { margin-bottom: 4px; }
+.settings-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 4px 0 12px;
+  margin-top: 8px;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.settings-section-header .section-heading { margin-bottom: 0; margin-top: 0; }
+.settings-section-chevron {
+  color: var(--text-muted);
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+.settings-section.expanded .settings-section-chevron { transform: rotate(180deg); }
+.settings-section-body { display: none; }
+.settings-section.expanded .settings-section-body { display: block; }
 
 /* ── NEW ROUTINE FORM ── */
 .new-routine-card {
@@ -792,6 +847,178 @@ canvas#chart { width: 100%; border-radius: 12px; display: block; }
 .pr-group-body { display: none; padding: 0 16px 12px; border-top: 1px solid var(--border); }
 .pr-group.expanded .pr-group-body { display: block; }
 
+/* ── GOALS ── */
+.goal-card {
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  padding: 16px;
+  margin-bottom: 10px;
+}
+.goal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; gap: 8px; }
+.goal-exercise { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; line-height: 1.1; }
+.goal-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+.goal-stats { display: flex; gap: 16px; margin-bottom: 12px; }
+.goal-stat { display: flex; flex-direction: column; gap: 2px; }
+.goal-stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 24px; line-height: 1; }
+.goal-stat-val.current { color: var(--primary); }
+.goal-stat-val.target  { color: var(--accent); }
+.goal-stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Raleway', sans-serif; font-weight: 700; }
+.goal-progress-track {
+  height: 8px;
+  background: var(--surface2);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.goal-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transition: width 0.4s ease;
+}
+.goal-progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-bottom: 10px; }
+.goal-mini-chart { margin-top: 4px; }
+.goal-deadline-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border-radius: 20px;
+  padding: 3px 8px;
+  margin-top: 4px;
+}
+.goal-deadline-badge.soon { color: var(--accent); }
+.goal-deadline-badge.overdue { color: var(--primary); }
+.goal-form-card {
+  background: var(--surface2);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: none;
+}
+.goal-form-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: flex-end; }
+.goal-form-row .add-exercise-input { flex: 1; }
+.goal-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+.goal-empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; }
+.nutri-daily-card {
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+  padding: 0 16px;
+}
+.nutri-row {
+  display: flex;
+  align-items: center;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 10px;
+}
+.nutri-row:last-child { border-bottom: none; }
+.nutri-label { flex: 1; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.nutri-counter { display: flex; align-items: center; gap: 8px; }
+.nutri-count-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.nutri-count-btn:active { background: var(--primary-dim); }
+.nutri-count-value { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; min-width: 32px; text-align: center; }
+.nutri-unit { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+.nutri-number-input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  width: 80px;
+  text-align: center;
+}
+.nutri-number-input:focus { outline: none; border-color: var(--primary); }
+.nutri-toggle-btn {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-family: 'Raleway', sans-serif;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.nutri-toggle-btn.active { background: var(--primary-dim); border-color: var(--primary); color: var(--primary); }
+.nutri-chart-card {
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.nutri-chart-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 8px; }
+.nutri-metric-pills { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; flex: 1; }
+.nutri-metric-pills::-webkit-scrollbar { display: none; }
+.nutri-metric-pill {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Raleway', sans-serif;
+  transition: all 0.15s;
+}
+.nutri-metric-pill.active { background: var(--primary-dim); border-color: var(--primary); color: var(--primary); }
+.nutri-range-toggle { display: flex; background: var(--surface2); border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+.nutri-range-btn {
+  padding: 6px 10px;
+  border: none; background: none;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.nutri-range-btn.active { background: var(--primary); color: #fff; }
+.nutri-custom-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.nutri-custom-item:last-of-type { border-bottom: none; }
+.nutri-custom-form {
+  background: var(--surface2);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.nutri-type-row { display: flex; gap: 6px; margin: 10px 0; flex-wrap: wrap; }
+.nutri-type-btn {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+}
+.nutri-type-btn.active { border-color: var(--primary); color: var(--primary); background: var(--primary-dim); }
+
 /* ── TOAST ── */
 .toast {
   position: fixed;
@@ -833,17 +1060,17 @@ canvas#chart { width: 100%; border-radius: 12px; display: block; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 12px 0 14px;
+  padding: 10px 0 12px;
   cursor: pointer;
   color: var(--text-muted);
   border: none;
   background: none;
-  gap: 4px;
+  gap: 3px;
   transition: color 0.15s;
 }
 .nav-tab.active { color: var(--primary); }
-.nav-icon { width: 22px; height: 22px; }
-.nav-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-family: 'Raleway', sans-serif; }
+.nav-icon { width: 20px; height: 20px; }
+.nav-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Raleway', sans-serif; }
 </style>
 </head>
 <body>
@@ -851,12 +1078,20 @@ canvas#chart { width: 100%; border-radius: 12px; display: block; }
 <div class="topbar">
   <div class="topbar-title">GYM<span>DASH</span></div>
   <div class="topbar-date" id="topbarDate"></div>
+  <button class="topbar-gear" id="topbarGear" onclick="openSettings()" title="Settings">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+  </button>
 </div>
 
 <div class="page active" id="page-log"></div>
 <div class="page" id="page-history"></div>
 <div class="page" id="page-progress"></div>
 <div class="page" id="page-trophies"></div>
+<div class="page" id="page-goals"></div>
+<div class="page" id="page-nutrition"></div>
 <div class="page" id="page-settings"></div>
 
 <div class="toast" id="toast"></div>
@@ -892,19 +1127,27 @@ canvas#chart { width: 100%; border-radius: 12px; display: block; }
     </svg>
     <span class="nav-label">Trophies</span>
   </button>
-  <button class="nav-tab" onclick="switchTab('settings',this)">
+  <button class="nav-tab" onclick="switchTab('goals',this)">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
-      <circle cx="8" cy="6" r="2" fill="var(--bg)"/><circle cx="16" cy="12" r="2" fill="var(--bg)"/><circle cx="10" cy="18" r="2" fill="var(--bg)"/>
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="12" cy="12" r="6"/>
+      <circle cx="12" cy="12" r="2"/>
     </svg>
-    <span class="nav-label">Settings</span>
+    <span class="nav-label">Goals</span>
+  </button>
+  <button class="nav-tab" onclick="switchTab('nutrition',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2a3 3 0 0 1 3 3"/>
+      <path d="M8.5 5C6 5 3 8 3 12c0 5 3 9 5 9 1.5 0 2.5-1 4-1s2.5 1 4 1c2 0 5-4 5-9 0-4-3-7-5.5-7A5 5 0 0 0 8.5 5z"/>
+    </svg>
+    <span class="nav-label">Fuel</span>
   </button>
 </nav>
 
 <script>
 // ── VERSION ──
 // REMINDER: Run .\bump-version.ps1 before making any significant changes.
-const APP_VERSION = 'v1.6';
+const APP_VERSION = 'v1.10';
 
 // ── THEMES ──
 const THEMES = {
@@ -946,15 +1189,44 @@ function setTheme(id) {
 }
 
 // ── TAB SWITCHING ──
+let _prevTabState = null;
+
 function switchTab(name, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('topbarGear').classList.remove('active');
   document.getElementById('page-' + name).classList.add('active');
   el.classList.add('active');
-  if (name === 'history') renderHistory();
-  if (name === 'progress') renderProgress();
-  if (name === 'trophies') renderTrophies();
-  if (name === 'settings') renderSettings();
+  if (name === 'history')   renderHistory();
+  if (name === 'progress')  renderProgress();
+  if (name === 'trophies')  renderTrophies();
+  if (name === 'goals')     renderGoals();
+  if (name === 'nutrition') renderNutrition();
+}
+
+function openSettings() {
+  const gear = document.getElementById('topbarGear');
+  if (gear.classList.contains('active')) {
+    // Toggle back to the tab the user came from
+    if (_prevTabState) {
+      switchTab(_prevTabState.name, _prevTabState.el);
+    } else {
+      const logBtn = document.querySelector('.nav-tab');
+      switchTab('log', logBtn);
+    }
+    return;
+  }
+  // Capture current tab before switching to settings
+  const activeTab  = document.querySelector('.nav-tab.active');
+  const activePage = document.querySelector('.page.active');
+  _prevTabState = (activeTab && activePage)
+    ? { name: activePage.id.replace('page-', ''), el: activeTab }
+    : null;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-settings').classList.add('active');
+  gear.classList.add('active');
+  renderSettings();
 }
 
 // ── DEFAULTS ──
@@ -1134,6 +1406,101 @@ const TROPHY_DEFS = [
     icon: `<path d="M8 3H5l3 9-4 9h4l2-4h4l2 4h4l-4-9 3-9h-3l-2 6h-3z"/>`,
     check: (w) => w.filter(s => s.sets.some(x => x.routine === 'Legs')).length >= 10,
   },
+  // — Fuel & Recovery —
+  {
+    id: 'hydrated',
+    name: 'Hydrated',
+    desc: 'Hit your water goal 7 days in a row',
+    tier: 'bronze',
+    icon: `<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>`,
+    check: (w, n) => {
+      const cfg = getNutritionConfig();
+      const goal = cfg.waterGoal || 8;
+      const sorted = Object.entries(n).sort(([a],[b]) => a < b ? -1 : 1);
+      let streak = 0;
+      for (const [,d] of sorted) { if ((d.water||0) >= goal) { streak++; if (streak >= 7) return true; } else streak = 0; }
+      return false;
+    },
+  },
+  {
+    id: 'protein_goal',
+    name: 'Protein Protocol',
+    desc: 'Log protein 14 days in a row',
+    tier: 'silver',
+    icon: `<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>`,
+    check: (w, n) => {
+      const sorted = Object.entries(n).sort(([a],[b]) => a < b ? -1 : 1);
+      let streak = 0;
+      for (const [,d] of sorted) { if ((d.protein||0) > 0) { streak++; if (streak >= 14) return true; } else streak = 0; }
+      return false;
+    },
+  },
+  {
+    id: 'creatine_streak',
+    name: 'Loading Phase',
+    desc: 'Log creatine 30 days in a row',
+    tier: 'gold',
+    icon: `<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>`,
+    check: (w, n) => {
+      const sorted = Object.entries(n).sort(([a],[b]) => a < b ? -1 : 1);
+      let streak = 0;
+      for (const [,d] of sorted) { if (d.creatine) { streak++; if (streak >= 30) return true; } else streak = 0; }
+      return false;
+    },
+  },
+  {
+    id: 'weight_logger',
+    name: 'On the Scale',
+    desc: 'Log your body weight 10 times',
+    tier: 'bronze',
+    icon: `<line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>`,
+    check: (w, n) => Object.values(n).filter(d => d.weight !== null && d.weight !== undefined).length >= 10,
+  },
+  {
+    id: 'sleep_champ',
+    name: 'Sleep Champion',
+    desc: 'Log 8+ hours of sleep 7 times',
+    tier: 'silver',
+    icon: `<path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="9" x2="12" y2="2"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="16 5 12 9 8 5"/>`,
+    check: (w, n) => Object.values(n).filter(d => (d.sleep||0) >= 8).length >= 7,
+  },
+  {
+    id: 'supplement_king',
+    name: 'Supplement King',
+    desc: 'Hit water goal + protein + creatine on the same day, 7 times',
+    tier: 'diamond',
+    icon: `<path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>`,
+    check: (w, n) => {
+      const cfg = getNutritionConfig();
+      const goal = cfg.waterGoal || 8;
+      return Object.values(n).filter(d => (d.water||0) >= goal && (d.protein||0) > 0 && d.creatine).length >= 7;
+    },
+  },
+  // — Goals —
+  {
+    id: 'goal_setter',
+    name: 'Goal Setter',
+    desc: 'Set your first lift goal',
+    tier: 'bronze',
+    icon: `<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>`,
+    check: () => getGoals().length >= 1,
+  },
+  {
+    id: 'bullseye',
+    name: 'Bullseye',
+    desc: 'Hit the target weight on any lift goal',
+    tier: 'gold',
+    icon: `<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21" y1="3" x2="15" y2="9"/><polyline points="17 3 21 3 21 7"/>`,
+    check: () => getGoals().some(g => getCurrentPR(g.exercise) >= g.targetWeight),
+  },
+  {
+    id: 'hat_trick',
+    name: 'Hat Trick',
+    desc: 'Achieve 3 lift goals',
+    tier: 'diamond',
+    icon: `<path d="M8 21h8M12 17v4"/><path d="M7 4H5a2 2 0 0 0-2 2v1a4 4 0 0 0 4 4"/><path d="M17 4h2a2 2 0 0 1 2 2v1a4 4 0 0 1-4 4"/><path d="M7 4h10v8a5 5 0 0 1-10 0V4z"/><text x="12" y="14" text-anchor="middle" font-family="monospace" font-size="6.5" fill="currentColor" stroke="none">3×3</text>`,
+    check: () => getGoals().filter(g => getCurrentPR(g.exercise) >= g.targetWeight).length >= 3,
+  },
 ];
 
 function computeStreakFromWorkouts(workouts) {
@@ -1156,7 +1523,8 @@ function computeStreakFromWorkouts(workouts) {
 
 function computeTrophies() {
   const { workouts } = getData();
-  return TROPHY_DEFS.map(t => ({ ...t, earned: t.check(workouts) }));
+  const nutrition = getAllNutrition();
+  return TROPHY_DEFS.map(t => ({ ...t, earned: t.check(workouts, nutrition) }));
 }
 
 // ── STORAGE ──
@@ -1260,7 +1628,7 @@ function computePRs() {
     const last = sessions[sessions.length - 1] || 0;
     const prev = sessions[sessions.length - 2] || null;
     const trend = prev === null ? null : last - prev;
-    return { exercise, max, trend };
+    return { exercise, max, trend, sessionHistory: sessions };
   }).sort((a,b) => b.max - a.max);
 }
 
@@ -1279,6 +1647,48 @@ function getChartData(exercise, mode) {
     const label = `${d.getMonth()+1}/${d.getDate()}`;
     return { label, value };
   });
+}
+
+// Epley 1RM estimate: best set per exercise = highest (weight * (1 + reps/30))
+function computeEstimated1RMs() {
+  const { workouts } = getData();
+  const bestMap = {}; // exercise -> { orm, weight, reps }
+  workouts.forEach(w => {
+    w.sets.forEach(s => {
+      if (s.bodyweight || !s.weight || !s.reps) return;
+      const orm = s.weight * (1 + s.reps / 30);
+      if (!bestMap[s.exercise] || orm > bestMap[s.exercise].orm) {
+        bestMap[s.exercise] = { orm, weight: s.weight, reps: s.reps };
+      }
+    });
+  });
+  return Object.entries(bestMap)
+    .map(([exercise, { orm, weight, reps }]) => ({ exercise, orm: Math.round(orm), weight, reps }))
+    .sort((a, b) => b.orm - a.orm);
+}
+
+// Weekly volume: total lbs lifted per week for last 12 weeks
+function computeWeeklyVolume() {
+  const { workouts } = getData();
+  const weekMap = {};
+  const today = new Date(); today.setHours(0,0,0,0);
+  workouts.forEach(w => {
+    const d = parseIso(w.date);
+    const msAgo = today - d;
+    const weeksAgo = Math.floor(msAgo / (7 * 86400000));
+    if (weeksAgo < 0 || weeksAgo >= 12) return;
+    const key = weeksAgo;
+    const vol = w.sets.reduce((sum, s) => sum + (!s.bodyweight && s.weight && s.reps ? s.weight * s.reps : 0), 0);
+    weekMap[key] = (weekMap[key] || 0) + vol;
+  });
+  // Build 12 buckets newest→oldest, label as week offset
+  const result = [];
+  for (let i = 11; i >= 0; i--) {
+    const wkStart = new Date(today.getTime() - (i + 1) * 7 * 86400000 + 86400000);
+    const label = i === 0 ? 'This wk' : `${i}w ago`;
+    result.push({ label, value: weekMap[i] || 0, weeksAgo: i });
+  }
+  return result;
 }
 
 function generateId() {
@@ -1662,9 +2072,9 @@ function toggleSession(card) {
   card.classList.toggle('expanded');
 }
 
-// ── PROGRESS ──
-let chartMode = 'max';
-let chartExercise = null;
+// ── NUTRITION STATE ──
+let nutChartMetric = 'weight';
+let nutChartRange = '30D';
 
 function renderProgress() {
   const { workouts } = getData();
@@ -1688,7 +2098,6 @@ function renderProgress() {
     if (!prByRoutine[bucket]) prByRoutine[bucket] = [];
     prByRoutine[bucket].push(p);
   });
-
   const orderedGroups = [...routineOrder.filter(r => prByRoutine[r]), ...(prByRoutine['Other'] ? ['Other'] : [])];
 
   const groupHtml = orderedGroups.map(groupName => {
@@ -1700,8 +2109,12 @@ function renderProgress() {
       else if (p.trend > 0) trendHtml = `<div class="pr-trend up">↑ +${p.trend} lbs</div>`;
       else if (p.trend < 0) trendHtml = `<div class="pr-trend down">↓ ${p.trend} lbs</div>`;
       else trendHtml = `<div class="pr-trend">→ same</div>`;
+      const safeEx = p.exercise.replace(/[^a-z0-9]/gi, '_');
       return `<div class="pr-row">
         <div class="pr-name">${p.exercise}</div>
+        <div class="pr-mid">
+          <canvas class="pr-sparkline" id="spark-${safeEx}" width="60" height="28"></canvas>
+        </div>
         <div class="pr-right">
           <div class="pr-weight">${p.max} lbs</div>
           ${trendHtml}
@@ -1722,31 +2135,55 @@ function renderProgress() {
       </div>`;
   }).join('');
 
-  const allExercises = [...new Set(workouts.flatMap(w => w.sets.map(s => s.exercise)))].sort();
-  if (!chartExercise || !allExercises.includes(chartExercise)) chartExercise = allExercises[0];
+  // Estimated 1RM
+  const orms = computeEstimated1RMs().slice(0, 10);
+  const ormHtml = orms.map((o, i) => `
+    <div class="orm-row">
+      <div class="orm-rank">#${i+1}</div>
+      <div class="orm-name">${o.exercise}</div>
+      <div class="orm-right">
+        <div class="orm-val">~${o.orm} lbs</div>
+        <div class="orm-source">${o.weight} lbs × ${o.reps}</div>
+      </div>
+    </div>`).join('');
+
+  // Weekly volume
+  const weeklyVol = computeWeeklyVolume();
+  const hasVolData = weeklyVol.some(w => w.value > 0);
 
   page.innerHTML = `
     <div class="section-heading">Personal Records</div>
     ${groupHtml}
-    <div class="section-heading">Exercise Trend</div>
+    <div class="section-heading">Estimated 1-Rep Max</div>
     <div class="card">
-      <div class="chart-controls">
-        <select class="select-field" id="chartExSelect" onchange="onChartExChange(this)" style="margin-bottom:0;flex:1">
-          ${allExercises.map(e => `<option value="${e}" ${e===chartExercise?'selected':''}>${e}</option>`).join('')}
-        </select>
-        <div class="chart-toggle">
-          <button class="chart-toggle-btn ${chartMode==='max'?'active':''}" onclick="setChartMode('max')">Max</button>
-          <button class="chart-toggle-btn ${chartMode==='volume'?'active':''}" onclick="setChartMode('volume')">Vol</button>
-        </div>
-      </div>
-      <canvas id="chart" height="200"></canvas>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px">Epley formula on best set &middot; top 10 lifts</div>
+      ${ormHtml || '<p style="color:var(--text-muted);font-size:13px">No weighted sets yet.</p>'}
+    </div>
+    <div class="section-heading">Weekly Volume</div>
+    <div class="card">
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px">Total weight lifted per week &middot; last 12 weeks</div>
+      ${hasVolData
+        ? `<div class="vol-chart-wrap"><canvas class="volume-canvas" id="volChart" height="180"></canvas></div>`
+        : `<p style="color:var(--text-muted);font-size:13px">Not enough data yet.</p>`}
     </div>
   `;
-  drawChart();
+
+  // Draw sparklines after DOM paint
+  requestAnimationFrame(() => {
+    prs.forEach(p => drawSparkline(p));
+    if (hasVolData) drawVolumeChart(weeklyVol);
+  });
 }
 
 function togglePRGroup(safeId) {
   document.getElementById('prg-' + safeId).classList.toggle('expanded');
+  // Re-draw sparklines after group expands
+  requestAnimationFrame(() => {
+    const group = document.getElementById('prg-' + safeId);
+    if (!group.classList.contains('expanded')) return;
+    const prs = computePRs();
+    prs.forEach(p => drawSparkline(p));
+  });
 }
 
 function toggleSessionGroup(safeEx) {
@@ -1764,75 +2201,111 @@ function toggleSessionGroup(safeEx) {
 
 function onChartExChange(sel) {
   chartExercise = sel.value;
-  drawChart();
+  drawVolumeChart(computeWeeklyVolume());
 }
 
-function setChartMode(mode) {
-  chartMode = mode;
-  renderProgress();
-}
-
-function drawChart() {
-  const canvas = document.getElementById('chart');
+function drawSparkline(p) {
+  const safeEx = p.exercise.replace(/[^a-z0-9]/gi, '_');
+  const canvas = document.getElementById('spark-' + safeEx);
   if (!canvas) return;
-  const data = getChartData(chartExercise, chartMode);
-  if (!data.length) return;
+  const history = p.sessionHistory || [];
+  if (history.length < 2) { canvas.style.opacity = '0.2'; return; }
+  const dpr = window.devicePixelRatio || 1;
+  const W = 60, H = 28;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+  const n = history.length;
+  const vals = history;
+  const minV = Math.min(...vals);
+  const maxV = Math.max(...vals);
+  const rng = maxV - minV || 1;
+  const toX = i => 2 + (i / (n - 1)) * (W - 4);
+  const toY = v => (H - 4) - ((v - minV) / rng) * (H - 8) + 2;
+  const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+  const green   = getComputedStyle(document.documentElement).getPropertyValue('--green').trim() || '#22c55e';
+  const color = vals[n-1] > vals[0] ? green : vals[n-1] < vals[0] ? primary : '#888';
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.lineJoin = 'round';
+  vals.forEach((v, i) => { i === 0 ? ctx.moveTo(toX(i), toY(v)) : ctx.lineTo(toX(i), toY(v)); });
+  ctx.stroke();
+  // End dot
+  ctx.beginPath();
+  ctx.fillStyle = color;
+  ctx.arc(toX(n-1), toY(vals[n-1]), 2.5, 0, Math.PI * 2);
+  ctx.fill();
+}
 
+function drawVolumeChart(data) {
+  const canvas = document.getElementById('volChart');
+  if (!canvas) return;
   const dpr = window.devicePixelRatio || 1;
   const W = canvas.offsetWidth;
-  const H = 200;
-  canvas.width  = W * dpr;
-  canvas.height = H * dpr;
-  canvas.style.width  = W + 'px';
-  canvas.style.height = H + 'px';
-
+  const H = 180;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
   const ctx = canvas.getContext('2d');
   ctx.scale(dpr, dpr);
   ctx.clearRect(0, 0, W, H);
 
-  const PAD_L = 8, PAD_R = 8, PAD_T = 28, PAD_B = 28;
+  const PAD_L = 8, PAD_R = 8, PAD_T = 24, PAD_B = 28;
   const chartW = W - PAD_L - PAD_R;
   const chartH = H - PAD_T - PAD_B;
-
-  const maxVal = Math.max(...data.map(d => d.value)) * 1.15;
-  const peak   = Math.max(...data.map(d => d.value));
-  const colW   = chartW / data.length;
-  const barW   = colW * 0.38;
+  const n = data.length;
+  const maxVal = Math.max(...data.map(d => d.value), 1) * 1.12;
+  const peakVal = Math.max(...data.map(d => d.value));
+  const colW = chartW / n;
+  const barW = colW * 0.52;
   const offset = (colW - barW) / 2;
 
-  // Subtle horizontal grid lines
-  ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+  const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+  const accent  = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
   ctx.lineWidth = 1;
   for (let g = 1; g <= 3; g++) {
     const gy = PAD_T + chartH - (g / 4) * chartH;
-    ctx.beginPath();
-    ctx.moveTo(PAD_L, gy);
-    ctx.lineTo(W - PAD_R, gy);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(PAD_L, gy); ctx.lineTo(W - PAD_R, gy); ctx.stroke();
   }
 
   data.forEach((d, i) => {
+    if (!d.value) return;
     const x   = PAD_L + i * colW + offset;
-    const pct = d.value / maxVal;
-    const bH  = Math.max(pct * chartH, 4);
+    const bH  = Math.max((d.value / maxVal) * chartH, 4);
     const y   = PAD_T + chartH - bH;
+    const isPeak = d.value === peakVal;
 
-    ctx.fillStyle = d.value === peak ? '#F59E0B' : '#DC2626';
+    // Bar gradient
+    const grad = ctx.createLinearGradient(0, y, 0, PAD_T + chartH);
+    grad.addColorStop(0, isPeak ? accent : primary);
+    grad.addColorStop(1, isPeak ? accent + '88' : primary + '55');
+    ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.roundRect(x, y, barW, bH, [4, 4, 0, 0]);
+    ctx.roundRect(x, y, barW, bH, [3, 3, 0, 0]);
     ctx.fill();
 
-    ctx.fillStyle = d.value === peak ? '#F59E0B' : '#FAFAFA';
-    ctx.font = `bold 10px 'JetBrains Mono', monospace`;
+    // Value label above bar
+    ctx.fillStyle = isPeak ? accent : 'rgba(255,255,255,0.75)';
+    ctx.font = `bold 9px 'JetBrains Mono', monospace`;
     ctx.textAlign = 'center';
-    const valLabel = chartMode === 'max'
-      ? `${d.value}`
-      : `${(d.value / 1000).toFixed(1)}k`;
-    ctx.fillText(valLabel, x + barW / 2, y - 6);
+    const lbl = d.value >= 10000 ? `${(d.value/1000).toFixed(0)}k` : `${(d.value/1000).toFixed(1)}k`;
+    ctx.fillText(lbl, x + barW / 2, y - 5);
+  });
 
-    ctx.fillStyle = '#A3A3A3';
-    ctx.font = `9px 'JetBrains Mono', monospace`;
-    ctx.fillText(d.label, x + barW / 2, H - 6);
+  // Week labels — only show every other to avoid crowding
+  data.forEach((d, i) => {
+    if (i % 2 !== 0 && i !== n - 1) return;
+    const x = PAD_L + i * colW + offset;
+    ctx.fillStyle = i === n - 1 ? 'rgba(255,255,255,0.9)' : '#6b7280';
+    ctx.font = `8px 'JetBrains Mono', monospace`;
+    ctx.textAlign = 'center';
+    const shortLbl = d.weeksAgo === 0 ? 'now' : `${d.weeksAgo}w`;
+    ctx.fillText(shortLbl, x + barW / 2, H - 8);
   });
 }
 
@@ -1857,6 +2330,8 @@ function renderTrophies() {
     { label: 'Consistency',       ids: ['three_peat','month_machine','relentless'] },
     { label: 'Lifting Milestones',ids: ['pr_hunter','plate_math','two_plates','three_plates'] },
     { label: 'Volume & Variety',  ids: ['grease_the_groove','tonnage','full_split','leg_day_lifer'] },
+    { label: 'Fuel & Recovery',   ids: ['hydrated','protein_goal','creatine_streak','weight_logger','sleep_champ','supplement_king'] },
+    { label: 'Goals',             ids: ['goal_setter','bullseye','hat_trick'] },
   ];
 
   const trophyMap = Object.fromEntries(trophies.map(t => [t.id, t]));
@@ -1893,6 +2368,262 @@ function renderTrophies() {
     </div>
     ${groupsHtml}
   `;
+}
+
+// ── GOALS DATA ──
+function getGoals() {
+  return JSON.parse(localStorage.getItem('gymdash_goals') || '[]');
+}
+function saveGoals(goals) {
+  localStorage.setItem('gymdash_goals', JSON.stringify(goals));
+}
+function getExercisePRHistory(exercise) {
+  const { workouts } = getData();
+  const sorted = [...workouts].sort((a,b) => parseIso(a.date) - parseIso(b.date));
+  let runningMax = 0;
+  const history = [];
+  sorted.forEach(w => {
+    const best = w.sets.filter(s => s.exercise === exercise && !s.bodyweight)
+                       .reduce((m, s) => Math.max(m, s.weight), 0);
+    if (best > 0) {
+      runningMax = Math.max(runningMax, best);
+      const d = parseIso(w.date);
+      history.push({ label: `${d.getMonth()+1}/${d.getDate()}`, value: runningMax, date: w.date });
+    }
+  });
+  return history;
+}
+function getCurrentPR(exercise) {
+  const { workouts } = getData();
+  let max = 0;
+  workouts.forEach(w => w.sets.forEach(s => { if (s.exercise === exercise && !s.bodyweight && s.weight > max) max = s.weight; }));
+  return max;
+}
+function getDaysUntil(dateStr) {
+  if (!dateStr) return null;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const target = new Date(dateStr + 'T00:00:00');
+  return Math.round((target - today) / 86400000);
+}
+
+// ── GOALS RENDER ──
+function renderGoals() {
+  const page = document.getElementById('page-goals');
+  const goals = getGoals();
+  const { workouts } = getData();
+  const allExercises = [...new Set(workouts.flatMap(w => w.sets.filter(s => !s.bodyweight).map(s => s.exercise)))].sort();
+
+  const formHtml = `
+    <div class="goal-form-card" id="goalFormCard">
+      <div class="card-label" style="margin-bottom:12px">New Goal</div>
+      <div style="margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;font-weight:600">EXERCISE</div>
+        <select class="select-field" id="goalExercise" style="width:100%">
+          <option value="">Select exercise...</option>
+          ${allExercises.map(e => `<option value="${e}">${e}</option>`).join('')}
+          <option value="__custom">Custom (type below)...</option>
+        </select>
+        <input class="add-exercise-input" id="goalCustomEx" placeholder="Custom exercise name..." style="display:none;margin-top:6px;width:100%" />
+      </div>
+      <div class="goal-form-row">
+        <div style="flex:1">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;font-weight:600">TARGET WEIGHT (LBS)</div>
+          <input class="add-exercise-input" id="goalTarget" type="number" placeholder="e.g. 225" style="width:100%" />
+        </div>
+        <div style="flex:1">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;font-weight:600">DEADLINE (OPTIONAL)</div>
+          <input class="add-exercise-input" id="goalDeadline" type="date" style="width:100%;color-scheme:dark" />
+        </div>
+      </div>
+      <div class="new-routine-btn-row">
+        <button class="btn-primary" style="flex:1" onclick="saveNewGoal()">✓ Save Goal</button>
+        <button class="btn-outline" style="margin-top:0;flex:1" onclick="cancelGoalForm()">Cancel</button>
+      </div>
+    </div>`;
+
+  if (!goals.length) {
+    page.innerHTML = `
+      ${formHtml}
+      <div class="goal-empty" id="goalEmpty">
+        <div class="goal-empty-title">No Goals Yet</div>
+        <div>Set a target lift to track your progress toward it.</div>
+      </div>
+      <button class="btn-outline" id="addGoalBtn" onclick="showGoalForm()" style="width:100%;margin-top:8px">＋ Set a Goal</button>`;
+    return;
+  }
+
+  const cardsHtml = goals.map(g => buildGoalCard(g)).join('');
+  page.innerHTML = `
+    ${formHtml}
+    <div class="section-heading">Active Goals</div>
+    ${cardsHtml}
+    <button class="btn-outline" id="addGoalBtn" onclick="showGoalForm()" style="width:100%;margin-top:4px">＋ Set a Goal</button>`;
+
+  goals.forEach(g => {
+    requestAnimationFrame(() => drawGoalMiniChart(g));
+  });
+}
+
+function buildGoalCard(g) {
+  const currentPR = getCurrentPR(g.exercise);
+  const pct = g.targetWeight > 0 ? Math.min(100, Math.round((currentPR / g.targetWeight) * 100)) : 0;
+  const remaining = Math.max(0, g.targetWeight - currentPR);
+  const daysLeft = getDaysUntil(g.deadline);
+  let deadlineBadge = '';
+  if (daysLeft !== null) {
+    const cls = daysLeft < 0 ? 'overdue' : daysLeft <= 14 ? 'soon' : '';
+    const label = daysLeft < 0 ? `${Math.abs(daysLeft)}d overdue` : daysLeft === 0 ? 'Due today' : `${daysLeft}d left`;
+    deadlineBadge = `<span class="goal-deadline-badge ${cls}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:10px;height:10px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      ${label}</span>`;
+  }
+  const completedBadge = pct >= 100
+    ? `<span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--accent);background:rgba(245,158,11,0.12);border-radius:20px;padding:3px 8px;margin-left:6px">✓ ACHIEVED</span>`
+    : '';
+
+  return `
+    <div class="goal-card" id="goal-${g.id}">
+      <div class="goal-header">
+        <div>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
+            <div class="goal-exercise">${g.exercise}</div>${completedBadge}
+          </div>
+          ${deadlineBadge}
+        </div>
+        <button class="routine-ex-delete" onclick="deleteGoal('${g.id}')" style="font-size:18px;padding:4px 6px">✕</button>
+      </div>
+      <div class="goal-stats">
+        <div class="goal-stat">
+          <div class="goal-stat-val current">${currentPR > 0 ? currentPR + ' lbs' : '—'}</div>
+          <div class="goal-stat-label">Current PR</div>
+        </div>
+        <div style="display:flex;align-items:center;color:var(--border);font-size:20px;padding-top:2px">→</div>
+        <div class="goal-stat">
+          <div class="goal-stat-val target">${g.targetWeight} lbs</div>
+          <div class="goal-stat-label">Target</div>
+        </div>
+        ${remaining > 0 ? `
+        <div class="goal-stat" style="margin-left:auto">
+          <div class="goal-stat-val" style="font-size:18px;color:var(--text-muted)">${remaining} lbs</div>
+          <div class="goal-stat-label">To Go</div>
+        </div>` : ''}
+      </div>
+      <div class="goal-progress-track">
+        <div class="goal-progress-fill" style="width:${pct}%"></div>
+      </div>
+      <div class="goal-progress-label">
+        <span>0 lbs</span>
+        <span style="color:var(--text);font-weight:700">${pct}%</span>
+        <span>${g.targetWeight} lbs</span>
+      </div>
+      <div class="goal-mini-chart">
+        <canvas id="goal-chart-${g.id}" height="80"></canvas>
+      </div>
+    </div>`;
+}
+
+function drawGoalMiniChart(g) {
+  const canvas = document.getElementById('goal-chart-' + g.id);
+  if (!canvas) return;
+  const history = getExercisePRHistory(g.exercise);
+  if (history.length < 2) {
+    const ctx2 = canvas.getContext('2d');
+    canvas.style.display = 'none';
+    return;
+  }
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.offsetWidth; const H = 80;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  const PAD_L=8, PAD_R=8, PAD_T=14, PAD_B=18;
+  const cW = W-PAD_L-PAD_R, cH = H-PAD_T-PAD_B;
+  const n = history.length;
+  const vals = history.map(p => p.value);
+  const minV = Math.min(...vals) * 0.95;
+  const maxV = Math.max(Math.max(...vals), g.targetWeight) * 1.02;
+  const toX = i => PAD_L + (n > 1 ? (i/(n-1)) * cW : cW/2);
+  const toY = v => PAD_T + cH - ((v - minV) / (maxV - minV)) * cH;
+
+  const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+  const accent  = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+  const border  = getComputedStyle(document.documentElement).getPropertyValue('--border').trim();
+
+  // Target line
+  const ty = toY(g.targetWeight);
+  if (ty >= PAD_T && ty <= PAD_T + cH) {
+    ctx.setLineDash([4, 3]);
+    ctx.strokeStyle = accent + 'AA';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(PAD_L, ty); ctx.lineTo(W-PAD_R, ty); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = accent;
+    ctx.font = `bold 9px 'JetBrains Mono', monospace`;
+    ctx.textAlign = 'right';
+    ctx.fillText('TARGET', W - PAD_R - 2, ty - 3);
+  }
+
+  // PR line fill
+  const grad = ctx.createLinearGradient(0, PAD_T, 0, PAD_T + cH);
+  grad.addColorStop(0, primary + '44'); grad.addColorStop(1, primary + '00');
+  ctx.beginPath();
+  history.forEach((p, i) => { i===0 ? ctx.moveTo(toX(i), toY(p.value)) : ctx.lineTo(toX(i), toY(p.value)); });
+  ctx.lineTo(toX(n-1), PAD_T+cH); ctx.lineTo(toX(0), PAD_T+cH); ctx.closePath();
+  ctx.fillStyle = grad; ctx.fill();
+
+  // PR line
+  ctx.beginPath(); ctx.strokeStyle = primary; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+  history.forEach((p, i) => { i===0 ? ctx.moveTo(toX(i), toY(p.value)) : ctx.lineTo(toX(i), toY(p.value)); });
+  ctx.stroke();
+
+  // Dots + labels
+  history.forEach((p, i) => {
+    ctx.beginPath(); ctx.fillStyle = primary;
+    ctx.arc(toX(i), toY(p.value), 3, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#A3A3A3'; ctx.font = `9px 'JetBrains Mono', monospace`;
+    ctx.textAlign = 'center';
+    if (i === 0 || i === n-1 || n <= 5) ctx.fillText(p.label, toX(i), H - 3);
+  });
+}
+
+function showGoalForm() {
+  document.getElementById('goalFormCard').style.display = 'block';
+  document.getElementById('addGoalBtn').style.display = 'none';
+  const empty = document.getElementById('goalEmpty');
+  if (empty) empty.style.display = 'none';
+  document.getElementById('goalExercise').onchange = function() {
+    document.getElementById('goalCustomEx').style.display = this.value === '__custom' ? 'block' : 'none';
+  };
+}
+function cancelGoalForm() {
+  document.getElementById('goalFormCard').style.display = 'none';
+  document.getElementById('addGoalBtn').style.display = '';
+  const empty = document.getElementById('goalEmpty');
+  if (empty && !getGoals().length) empty.style.display = '';
+}
+function saveNewGoal() {
+  const sel = document.getElementById('goalExercise').value;
+  const exercise = sel === '__custom'
+    ? document.getElementById('goalCustomEx').value.trim()
+    : sel;
+  const target = parseFloat(document.getElementById('goalTarget').value);
+  const deadline = document.getElementById('goalDeadline').value || null;
+  if (!exercise) { showToast('Select or enter an exercise'); return; }
+  if (!target || target <= 0) { showToast('Enter a target weight'); return; }
+  const goals = getGoals();
+  if (goals.some(g => g.exercise === exercise)) { showToast('Goal for ' + exercise + ' already exists'); return; }
+  goals.push({ id: generateId(), exercise, targetWeight: target, deadline });
+  saveGoals(goals);
+  showToast('Goal set: ' + exercise + ' → ' + target + ' lbs');
+  renderGoals();
+}
+function deleteGoal(id) {
+  const goals = getGoals().filter(g => g.id !== id);
+  saveGoals(goals);
+  renderGoals();
 }
 
 // ── SETTINGS ──
@@ -1951,31 +2682,54 @@ function renderSettings() {
     </div>`;
 
   page.innerHTML = `
-    <div class="section-heading">Routines</div>
-    ${newRoutineForm}
-    ${routineCards}
-    <button class="btn-outline" id="addRoutineBtn" onclick="showNewRoutineForm()" style="width:100%;margin-bottom:10px">＋ New Routine</button>
-    <div class="section-heading" style="margin-top:8px">Theme</div>
-    <div class="card">
-      <div class="card-label">Color Theme</div>
-      <div class="theme-grid">
-        ${Object.entries(THEMES).map(([id, t]) => `
-          <div class="theme-swatch ${localStorage.getItem('gymdash_theme')=== id || (!localStorage.getItem('gymdash_theme') && id==='noir') ? 'active' : ''}" onclick="setTheme('${id}')">
-            <div class="theme-swatch-dot" style="background:${t.primary};border-color:${t.accent}"></div>
-            <div class="theme-swatch-label">${t.name}${t.dark?'':' ☀'}</div>
+    <div class="settings-section" id="section-routines">
+      <div class="settings-section-header" onclick="toggleSettingsSection('routines')">
+        <div class="section-heading">Routines</div>
+        <span class="settings-section-chevron">▼</span>
+      </div>
+      <div class="settings-section-body">
+        ${newRoutineForm}
+        ${routineCards}
+        <button class="btn-outline" id="addRoutineBtn" onclick="showNewRoutineForm()" style="width:100%;margin-bottom:10px">＋ New Routine</button>
+      </div>
+    </div>
+    <div class="settings-section" id="section-theme">
+      <div class="settings-section-header" onclick="toggleSettingsSection('theme')">
+        <div class="section-heading">Theme</div>
+        <span class="settings-section-chevron">▼</span>
+      </div>
+      <div class="settings-section-body">
+        <div class="card" style="margin-bottom:10px">
+          <div class="card-label">Color Theme</div>
+          <div class="theme-grid">
+            ${Object.entries(THEMES).map(([id, t]) => `
+              <div class="theme-swatch ${localStorage.getItem('gymdash_theme')=== id || (!localStorage.getItem('gymdash_theme') && id==='noir') ? 'active' : ''}" onclick="setTheme('${id}')">
+                <div class="theme-swatch-dot" style="background:${t.primary};border-color:${t.accent}"></div>
+                <div class="theme-swatch-label">${t.name}${t.dark?'':' ☀'}</div>
+              </div>
+            `).join('')}
           </div>
-        `).join('')}
+        </div>
       </div>
     </div>
     <div class="section-heading" style="margin-top:8px">Data</div>
     <div class="card">
-      <div class="card-label">Import / Export</div>
+      <div class="card-label">Workouts</div>
       <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">CSV format: Date, Exercise, Weight, Reps</p>
       <div class="data-btn-row">
         <button class="btn-outline" onclick="triggerImport()" style="margin-top:0">⬆ Import CSV</button>
         <button class="btn-outline" onclick="exportCSV()" style="margin-top:0">⬇ Export CSV</button>
       </div>
       <input type="file" id="csvFileInput" style="display:none" onchange="handleImport(this)" />
+    </div>
+    <div class="card" style="margin-top:10px">
+      <div class="card-label">Nutrition</div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">CSV format: Date, Water, Protein, Creatine, Weight, Sleep, custom...</p>
+      <div class="data-btn-row">
+        <button class="btn-outline" onclick="triggerNutritionImport()" style="margin-top:0">⬆ Import CSV</button>
+        <button class="btn-outline" onclick="exportNutritionCSV()" style="margin-top:0">⬇ Export CSV</button>
+      </div>
+      <input type="file" id="nutriCsvInput" style="display:none" onchange="handleNutritionImport(this)" />
     </div>
     <div class="section-heading" style="margin-top:8px">About</div>
     <div class="card">
@@ -1987,6 +2741,10 @@ function renderSettings() {
 
 function toggleRoutine(id) {
   document.getElementById('rc-' + id).classList.toggle('expanded');
+}
+
+function toggleSettingsSection(id) {
+  document.getElementById('section-' + id).classList.toggle('expanded');
 }
 
 function removeExercise(routineName, idx) {
@@ -2162,6 +2920,464 @@ function processImportText(text) {
 
   showToast(`Imported ${imported} sessions. Skipped ${skipped} rows.`);
   renderLog();
+}
+
+// ── NUTRITION DATA ──
+function getNutritionDay(dateStr) {
+  const all = JSON.parse(localStorage.getItem('gymdash_nutrition') || '{}');
+  return Object.assign({ water: 0, protein: 0, creatine: false, weight: null, sleep: null, custom: {} }, all[dateStr] || {});
+}
+function saveNutritionDay(dateStr, data) {
+  const all = JSON.parse(localStorage.getItem('gymdash_nutrition') || '{}');
+  all[dateStr] = data;
+  localStorage.setItem('gymdash_nutrition', JSON.stringify(all));
+}
+function getAllNutrition() {
+  return JSON.parse(localStorage.getItem('gymdash_nutrition') || '{}');
+}
+function getNutritionConfig() {
+  return Object.assign({ waterGoal: 8, proteinGoal: 150, customMetrics: [] },
+    JSON.parse(localStorage.getItem('gymdash_nutrition_config') || '{}'));
+}
+function saveNutritionConfig(cfg) {
+  localStorage.setItem('gymdash_nutrition_config', JSON.stringify(cfg));
+}
+
+// ── NUTRITION RENDER ──
+function renderNutrition() {
+  const today = isoDate(new Date());
+  const day = getNutritionDay(today);
+  const config = getNutritionConfig();
+  const page = document.getElementById('page-nutrition');
+  const dateLabel = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }).toUpperCase();
+
+  const customRows = config.customMetrics.map(m => {
+    const val = (day.custom || {})[m.id];
+    if (m.type === 'toggle') {
+      const active = val === true;
+      return `
+        <div class="nutri-row">
+          <div class="nutri-label">${m.name}</div>
+          <button class="nutri-toggle-btn ${active ? 'active' : ''}" onclick="toggleNutritionCustom('${m.id}')">${active ? '✓ Done' : 'Mark Done'}</button>
+        </div>`;
+    } else if (m.type === 'counter') {
+      return `
+        <div class="nutri-row">
+          <div class="nutri-label">${m.name}</div>
+          <div class="nutri-counter">
+            <button class="nutri-count-btn" onclick="adjustNutritionCustom('${m.id}', -1)">−</button>
+            <div class="nutri-count-value">${val || 0}</div>
+            <button class="nutri-count-btn" onclick="adjustNutritionCustom('${m.id}', 1)">+</button>
+          </div>
+        </div>`;
+    } else {
+      return `
+        <div class="nutri-row">
+          <div class="nutri-label">${m.name}</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input class="nutri-number-input" type="number" value="${val || ''}" placeholder="0"
+              onchange="saveNutritionCustomNumber('${m.id}', this.value)" />
+            <span class="nutri-unit">${m.unit}</span>
+          </div>
+        </div>`;
+    }
+  }).join('');
+
+  const chartMetrics = [
+    { id: 'weight', label: 'Weight' },
+    { id: 'sleep',  label: 'Sleep' },
+    ...config.customMetrics.filter(m => m.type === 'number' || m.type === 'counter').map(m => ({ id: m.id, label: m.name }))
+  ];
+  const metricPills = chartMetrics.map(m =>
+    `<button class="nutri-metric-pill ${nutChartMetric === m.id ? 'active' : ''}" onclick="setNutriChartMetric('${m.id}')">${m.label}</button>`
+  ).join('');
+
+  const customList = config.customMetrics.map(m => `
+    <div class="nutri-custom-item">
+      <div>
+        <div style="font-weight:600;font-size:14px">${m.name}</div>
+        <div style="font-size:11px;color:var(--text-muted)">${m.type}${m.unit ? ' · ' + m.unit : ''}</div>
+      </div>
+      <button class="routine-ex-delete" onclick="deleteCustomMetric('${m.id}')">✕</button>
+    </div>`).join('');
+
+  page.innerHTML = `
+    <div class="section-heading">${dateLabel}</div>
+    <div class="nutri-daily-card">
+      <div class="nutri-row">
+        <div class="nutri-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0"><path d="M12 2v6M12 22v-6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M22 12h-6M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24"/></svg>
+          Water
+        </div>
+        <div class="nutri-counter">
+          <button class="nutri-count-btn" onclick="adjustWater(-1)">−</button>
+          <div class="nutri-count-value">${day.water}</div>
+          <span class="nutri-unit">/ ${config.waterGoal} cups</span>
+          <button class="nutri-count-btn" onclick="adjustWater(1)">+</button>
+        </div>
+      </div>
+      <div class="nutri-row">
+        <div class="nutri-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          Protein
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input class="nutri-number-input" type="number" value="${day.protein || ''}" placeholder="0"
+            onchange="saveNutritionSimple('protein', +this.value)" />
+          <span class="nutri-unit">g</span>
+        </div>
+      </div>
+      <div class="nutri-row">
+        <div class="nutri-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Creatine
+        </div>
+        <button class="nutri-toggle-btn ${day.creatine ? 'active' : ''}" onclick="toggleCreatine()">${day.creatine ? '✓ Taken' : 'Mark Taken'}</button>
+      </div>
+      ${customRows}
+    </div>
+    <div class="nutri-daily-card">
+      <div class="nutri-row">
+        <div class="nutri-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+          Body Weight
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input class="nutri-number-input" type="number" step="0.1" value="${day.weight !== null && day.weight !== undefined ? day.weight : ''}" placeholder="—"
+            onchange="saveNutritionSimple('weight', this.value !== '' ? +this.value : null)" />
+          <span class="nutri-unit">lbs</span>
+        </div>
+      </div>
+      <div class="nutri-row">
+        <div>
+          <div class="nutri-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="9" x2="12" y2="2"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="16 5 12 9 8 5"/></svg>
+            Sleep
+          </div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:2px;padding-left:22px">Last night</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input class="nutri-number-input" type="number" step="0.5" value="${day.sleep !== null && day.sleep !== undefined ? day.sleep : ''}" placeholder="—"
+            onchange="saveNutritionSimple('sleep', this.value !== '' ? +this.value : null)" />
+          <span class="nutri-unit">hrs</span>
+        </div>
+      </div>
+    </div>
+    <div class="nutri-chart-card">
+      <div class="nutri-chart-controls">
+        <div class="nutri-metric-pills">${metricPills}</div>
+        <div class="nutri-range-toggle">
+          <button class="nutri-range-btn ${nutChartRange==='30D'?'active':''}" onclick="setNutriChartRange('30D')">30D</button>
+          <button class="nutri-range-btn ${nutChartRange==='12W'?'active':''}" onclick="setNutriChartRange('12W')">12W</button>
+          <button class="nutri-range-btn ${nutChartRange==='6M'?'active':''}" onclick="setNutriChartRange('6M')">6M</button>
+        </div>
+      </div>
+      <canvas id="nutri-chart" height="180"></canvas>
+    </div>
+    <div class="settings-section" id="section-custom-metrics">
+      <div class="settings-section-header" onclick="toggleSettingsSection('custom-metrics')">
+        <div class="section-heading">Custom Metrics</div>
+        <span class="settings-section-chevron">▼</span>
+      </div>
+      <div class="settings-section-body">
+        ${customList}
+        <div class="nutri-custom-form" id="newMetricForm" style="display:none">
+          <div class="card-label">New Metric</div>
+          <input class="add-exercise-input" id="newMetricName" placeholder="Metric name..." style="width:100%;margin-bottom:8px" />
+          <div class="nutri-type-row">
+            <button class="nutri-type-btn active" id="mtype-toggle" onclick="selectMetricType('toggle')">Toggle</button>
+            <button class="nutri-type-btn" id="mtype-counter" onclick="selectMetricType('counter')">Counter</button>
+            <button class="nutri-type-btn" id="mtype-number" onclick="selectMetricType('number')">Number</button>
+          </div>
+          <div id="metricUnitRow" style="display:none;margin-bottom:8px">
+            <input class="add-exercise-input" id="newMetricUnit" placeholder="Unit (e.g. kcal, mg)..." style="width:100%" />
+          </div>
+          <div class="new-routine-btn-row">
+            <button class="btn-primary" style="flex:1" onclick="saveNewCustomMetric()">✓ Save</button>
+            <button class="btn-outline" style="margin-top:0;flex:1" onclick="cancelNewMetric()">Cancel</button>
+          </div>
+        </div>
+        <button class="btn-outline" id="addMetricBtn" onclick="showAddMetricForm()" style="width:100%;margin-bottom:10px">＋ Add Custom Metric</button>
+      </div>
+    </div>
+  `;
+  requestAnimationFrame(drawNutritionChart);
+}
+
+function adjustWater(delta) {
+  const today = isoDate(new Date());
+  const day = getNutritionDay(today);
+  day.water = Math.max(0, (day.water || 0) + delta);
+  saveNutritionDay(today, day);
+  renderNutrition();
+}
+function toggleCreatine() {
+  const today = isoDate(new Date());
+  const day = getNutritionDay(today);
+  day.creatine = !day.creatine;
+  saveNutritionDay(today, day);
+  renderNutrition();
+}
+function saveNutritionSimple(field, value) {
+  const today = isoDate(new Date());
+  const day = getNutritionDay(today);
+  day[field] = value;
+  saveNutritionDay(today, day);
+}
+function toggleNutritionCustom(id) {
+  const today = isoDate(new Date());
+  const day = getNutritionDay(today);
+  if (!day.custom) day.custom = {};
+  day.custom[id] = !day.custom[id];
+  saveNutritionDay(today, day);
+  renderNutrition();
+}
+function adjustNutritionCustom(id, delta) {
+  const today = isoDate(new Date());
+  const day = getNutritionDay(today);
+  if (!day.custom) day.custom = {};
+  day.custom[id] = Math.max(0, ((day.custom[id] || 0) + delta));
+  saveNutritionDay(today, day);
+  renderNutrition();
+}
+function saveNutritionCustomNumber(id, value) {
+  const today = isoDate(new Date());
+  const day = getNutritionDay(today);
+  if (!day.custom) day.custom = {};
+  day.custom[id] = value !== '' ? +value : null;
+  saveNutritionDay(today, day);
+}
+function setNutriChartMetric(metric) {
+  nutChartMetric = metric;
+  renderNutrition();
+}
+function setNutriChartRange(range) {
+  nutChartRange = range;
+  renderNutrition();
+}
+
+// ── NUTRITION CHART ──
+function getNutriMetricValue(day, metric) {
+  if (metric === 'weight') return (day.weight !== null && day.weight !== undefined) ? +day.weight : null;
+  if (metric === 'sleep')  return (day.sleep  !== null && day.sleep  !== undefined) ? +day.sleep  : null;
+  const v = (day.custom || {})[metric];
+  return (v !== null && v !== undefined) ? +v : null;
+}
+function drawNutritionChart() {
+  const canvas = document.getElementById('nutri-chart');
+  if (!canvas) return;
+  const all   = getAllNutrition();
+  const today = new Date();
+  const points = [];
+
+  if (nutChartRange === '30D') {
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(today); d.setDate(today.getDate() - i);
+      const key = isoDate(d);
+      const day = Object.assign({ water:0, protein:0, creatine:false, weight:null, sleep:null, custom:{} }, all[key] || {});
+      const show = (i === 0 || i === 7 || i === 14 || i === 21 || i === 28);
+      points.push({ label: show ? d.toLocaleDateString('en-US',{month:'numeric',day:'numeric'}) : '', value: getNutriMetricValue(day, nutChartMetric) });
+    }
+  } else if (nutChartRange === '12W') {
+    for (let w = 11; w >= 0; w--) {
+      const weekEnd = new Date(today); weekEnd.setDate(today.getDate() - w * 7);
+      const weekStart = new Date(weekEnd); weekStart.setDate(weekEnd.getDate() - 6);
+      const vals = [];
+      for (let dd = new Date(weekStart); dd <= weekEnd; dd.setDate(dd.getDate() + 1)) {
+        const v = getNutriMetricValue(Object.assign({ water:0, protein:0, creatine:false, weight:null, sleep:null, custom:{} }, all[isoDate(new Date(dd))] || {}), nutChartMetric);
+        if (v !== null) vals.push(v);
+      }
+      const avg = vals.length ? +(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : null;
+      points.push({ label: (w % 3 === 0) ? weekEnd.toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '', value: avg });
+    }
+  } else {
+    for (let m = 5; m >= 0; m--) {
+      const firstDay = new Date(today.getFullYear(), today.getMonth() - m, 1);
+      const lastDay  = new Date(today.getFullYear(), today.getMonth() - m + 1, 0);
+      const vals = [];
+      for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate() + 1)) {
+        const v = getNutriMetricValue(Object.assign({ water:0, protein:0, creatine:false, weight:null, sleep:null, custom:{} }, all[isoDate(new Date(d))] || {}), nutChartMetric);
+        if (v !== null) vals.push(v);
+      }
+      const avg = vals.length ? +(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : null;
+      points.push({ label: firstDay.toLocaleDateString('en-US',{month:'short'}), value: avg });
+    }
+  }
+
+  const dpr = window.devicePixelRatio || 1;
+  const W   = canvas.offsetWidth;
+  const H   = 180;
+  canvas.width  = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  const validPts = points.map((p, i) => ({ ...p, i })).filter(p => p.value !== null);
+  if (!validPts.length) {
+    ctx.fillStyle = '#A3A3A3';
+    ctx.font = '13px Raleway, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('No data yet — log your first entry above', W / 2, H / 2);
+    return;
+  }
+
+  const PAD_L = 10, PAD_R = 10, PAD_T = 20, PAD_B = 28;
+  const chartW = W - PAD_L - PAD_R;
+  const chartH = H - PAD_T - PAD_B;
+  const n = points.length;
+  const vals = validPts.map(p => p.value);
+  const minV = Math.min(...vals), maxV = Math.max(...vals);
+  const span = maxV - minV || 1;
+  const lo = minV - span * 0.1, hi = maxV + span * 0.1;
+  const toX = i => PAD_L + (n > 1 ? (i / (n - 1)) * chartW : chartW / 2);
+  const toY = v => PAD_T + chartH - ((v - lo) / (hi - lo)) * chartH;
+
+  const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+  const accent  = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+  ctx.lineWidth = 1;
+  [0.25, 0.5, 0.75].forEach(pct => {
+    const y = PAD_T + chartH * (1 - pct);
+    ctx.beginPath(); ctx.moveTo(PAD_L, y); ctx.lineTo(W - PAD_R, y); ctx.stroke();
+  });
+
+  ctx.fillStyle = '#A3A3A3';
+  ctx.font = `9px 'JetBrains Mono', monospace`;
+  ctx.textAlign = 'center';
+  points.forEach((p, i) => { if (p.label) ctx.fillText(p.label, toX(i), H - 6); });
+
+  if (validPts.length > 1) {
+    const grad = ctx.createLinearGradient(0, PAD_T, 0, PAD_T + chartH);
+    grad.addColorStop(0, primary + '44');
+    grad.addColorStop(1, primary + '00');
+    ctx.beginPath();
+    validPts.forEach((p, idx) => { const x = toX(p.i), y = toY(p.value); idx === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+    ctx.lineTo(toX(validPts[validPts.length-1].i), PAD_T + chartH);
+    ctx.lineTo(toX(validPts[0].i), PAD_T + chartH);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.strokeStyle = primary;
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    validPts.forEach((p, idx) => { const x = toX(p.i), y = toY(p.value); idx === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+    ctx.stroke();
+  }
+
+  validPts.forEach(p => {
+    ctx.beginPath();
+    ctx.fillStyle = primary;
+    ctx.arc(toX(p.i), toY(p.value), 3.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  const last = validPts[validPts.length - 1];
+  if (last) {
+    ctx.fillStyle = accent;
+    ctx.font = `bold 11px 'JetBrains Mono', monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(String(last.value), toX(last.i), toY(last.value) - 8);
+  }
+}
+
+// ── CUSTOM METRIC MANAGEMENT ──
+let newMetricType = 'toggle';
+function showAddMetricForm() {
+  document.getElementById('section-custom-metrics').classList.add('expanded');
+  document.getElementById('newMetricForm').style.display = 'block';
+  document.getElementById('addMetricBtn').style.display = 'none';
+  newMetricType = 'toggle';
+  document.querySelectorAll('.nutri-type-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mtype-toggle').classList.add('active');
+  document.getElementById('metricUnitRow').style.display = 'none';
+}
+function cancelNewMetric() {
+  document.getElementById('newMetricForm').style.display = 'none';
+  document.getElementById('addMetricBtn').style.display = '';
+}
+function selectMetricType(type) {
+  newMetricType = type;
+  document.querySelectorAll('.nutri-type-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mtype-' + type).classList.add('active');
+  document.getElementById('metricUnitRow').style.display = type === 'number' ? 'block' : 'none';
+}
+function saveNewCustomMetric() {
+  const name = document.getElementById('newMetricName').value.trim();
+  if (!name) { showToast('Enter a metric name'); return; }
+  const unit = newMetricType === 'number' ? (document.getElementById('newMetricUnit').value.trim()) : '';
+  const cfg = getNutritionConfig();
+  cfg.customMetrics.push({ id: 'cm_' + Date.now(), name, type: newMetricType, unit });
+  saveNutritionConfig(cfg);
+  showToast('Added: ' + name);
+  renderNutrition();
+}
+function deleteCustomMetric(id) {
+  const cfg = getNutritionConfig();
+  cfg.customMetrics = cfg.customMetrics.filter(m => m.id !== id);
+  saveNutritionConfig(cfg);
+  if (nutChartMetric === id) nutChartMetric = 'weight';
+  renderNutrition();
+}
+
+// ── NUTRITION CSV IMPORT / EXPORT ──
+function exportNutritionCSV() {
+  const all = getAllNutrition();
+  const cfg = getNutritionConfig();
+  const customHeaders = cfg.customMetrics.map(m => m.name + (m.unit ? '(' + m.unit + ')' : ''));
+  let csv = ['Date','Water(cups)','Protein(g)','Creatine','Weight(lbs)','Sleep(hrs)',...customHeaders].join(',') + '\n';
+  Object.entries(all).sort(([a],[b]) => a < b ? -1 : 1).forEach(([date, d]) => {
+    const customVals = cfg.customMetrics.map(m => { const v = (d.custom||{})[m.id]; return (v !== null && v !== undefined) ? String(v) : ''; });
+    csv += [date, d.water||0, d.protein||0, d.creatine?'true':'false', d.weight??'', d.sleep??'', ...customVals].join(',') + '\n';
+  });
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'nutrition.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+function triggerNutritionImport() {
+  if (window.showOpenFilePicker) {
+    window.showOpenFilePicker({ multiple: false })
+      .then(async ([handle]) => { const file = await handle.getFile(); processNutritionImport(await file.text()); })
+      .catch(() => {});
+  } else {
+    document.getElementById('nutriCsvInput').click();
+  }
+}
+function handleNutritionImport(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => { processNutritionImport(e.target.result); input.value = ''; };
+  reader.readAsText(file);
+}
+function processNutritionImport(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  if (lines.length < 2) { showToast('No data found in file'); return; }
+  const all = getAllNutrition();
+  let imported = 0;
+  lines.slice(1).forEach(line => {
+    const parts = line.split(',');
+    const dateStr = parts[0]?.trim();
+    if (!dateStr) return;
+    const obj = {
+      water:    parseFloat(parts[1]) || 0,
+      protein:  parseFloat(parts[2]) || 0,
+      creatine: parts[3]?.trim() === 'true',
+      weight:   parts[4]?.trim() ? parseFloat(parts[4]) : null,
+      sleep:    parts[5]?.trim() ? parseFloat(parts[5]) : null,
+      custom:   all[dateStr]?.custom || {}
+    };
+    if (!all[dateStr]) imported++;
+    all[dateStr] = { ...all[dateStr], ...obj };
+  });
+  localStorage.setItem('gymdash_nutrition', JSON.stringify(all));
+  showToast('Imported ' + imported + ' nutrition entries');
+  renderNutrition();
 }
 
 // ── SERVICE WORKER ──
