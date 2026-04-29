@@ -169,24 +169,13 @@ body {
 
 /* ── PILLS ── */
 .pill-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  scrollbar-width: none;
-}
-.pill-row::-webkit-scrollbar { display: none; }
-/* Show a thin scrollbar on pointer/mouse devices (Windows browser) */
-@media (pointer: fine) {
-  .pill-row { scrollbar-width: thin; scrollbar-color: var(--primary) var(--surface2); padding-bottom: 6px; }
-  .pill-row::-webkit-scrollbar { display: block; height: 4px; }
-  .pill-row::-webkit-scrollbar-track { background: var(--surface2); border-radius: 2px; }
-  .pill-row::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 2px; }
 }
 .pill {
-  flex-shrink: 0;
-  padding: 8px 16px;
-  border-radius: 50px;
+  padding: 10px 12px;
+  border-radius: 12px;
   font-size: 13px;
   font-weight: 600;
   background: var(--surface2);
@@ -194,7 +183,10 @@ body {
   border: 1px solid var(--border);
   cursor: pointer;
   transition: all 0.15s;
+  text-align: center;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .pill.active { background: var(--primary); color: white; border-color: var(--primary); }
 
