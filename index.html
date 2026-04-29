@@ -1139,7 +1139,7 @@ canvas#chart { width: 100%; border-radius: 12px; display: block; }
 <script>
 // ── VERSION ──
 // REMINDER: Run .\bump-version.ps1 before making any significant changes.
-const APP_VERSION = 'v1.10';
+const APP_VERSION = 'v1.11';
 
 // ── THEMES ──
 const THEMES = {
@@ -1544,7 +1544,12 @@ function getWeekBounds(date) {
   const sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
   return { mon, sun };
 }
-function isoDate(d) { return d.toISOString().slice(0,10); }
+function isoDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
 function parseIso(str) {
   if (!str) return null;
   if (str.includes('/')) {
