@@ -1,4 +1,4 @@
-const CACHE = 'gymdash-v27';
+const CACHE = 'gymdash-v28';
 const ASSETS = [
   './index.html',
   './manifest.json',
